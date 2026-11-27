@@ -1,0 +1,15 @@
+{
+  "name": "colloexpres-ai-mvp",
+  "version": "0.2.0",
+  "private": true,
+  "description": "COLLOEXPRES grocery basket PWA with server-side AI list interpretation",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
