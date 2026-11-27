@@ -56,7 +56,7 @@ Máximo 35 productos. No incluyas precios. Si la petición no trata de compra, d
       body: JSON.stringify({
         model: MODEL,
         instructions,
-        input: prompt,
+        input: `Responde en formato JSON. Solicitud del usuario: ${prompt}`,
         text: { format: { type: "json_object" } },
         max_output_tokens: 1200
       })
