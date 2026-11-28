@@ -184,6 +184,11 @@ $("menuBtn").addEventListener("click", async () => {
       const product=document.createElement("p");product.textContent="Producto: "+data.product+" · Marca: "+data.brand;brandResult.append(product);
       if(data.visible_signs&&data.visible_signs.length){const ul=document.createElement("ul");data.visible_signs.forEach(sign=>{const li=document.createElement("li");li.textContent=sign;ul.append(li);});brandResult.append(ul);}
       const advice=document.createElement("p");advice.textContent=data.advice;brandResult.append(advice);
+      if(data.condition==="no_determinado"||data.condition==="señales_de_alerta"){
+        const warning=document.createElement("p");warning.className="safety-warning";
+        warning.textContent=data.condition==="no_determinado"?"⚠️ No estoy segura del estado de este producto. La foto no permite confirmarlo. Revisa la fecha, el envase y su conservación. Si tienes dudas, no lo compres ni lo consumas.":"⚠️ He detectado posibles señales de deterioro. No lo compres ni lo consumas si observas estos daños.";
+        brandResult.append(warning);
+      }
       const price=document.createElement("p");price.className="price-unavailable";price.textContent=data.price_message||"Precio no disponible";brandResult.append(price);
     }catch(error){brandResult.textContent=error.message;}
   });
