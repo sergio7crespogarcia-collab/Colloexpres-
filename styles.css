@@ -657,3 +657,22 @@ footer{background:#073e78}
  .book-controls{gap:7px}
  .book-controls .book-home{min-width:100px;height:42px;font-size:14px;padding:0 11px}
 }
+
+
+/* Pepa compacta y fuera de las casillas: queda debajo de la cabecera */
+.pepa-panel{
+  top:76px!important;
+  right:12px!important;
+  bottom:auto!important;
+}
+.pepa-launcher{
+  width:46px!important;
+  height:46px!important;
+  min-width:46px!important;
+  min-height:46px!important;
+  box-shadow:0 2px 8px #123b3220!important;
+}
+@media(max-width:600px){
+  .pepa-panel{top:68px!important;right:10px!important}
+  .pepa-launcher{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important}
+}
