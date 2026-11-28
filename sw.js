@@ -1,4 +1,4 @@
-const CACHE="colloexpres-v27";
+const CACHE="colloexpres-v28";
 const CORE=["./","./index.html","./styles.css","./app.js","./manifest.webmanifest"];
 self.addEventListener("install",event=>event.waitUntil((async()=>{
  const cache=await caches.open(CACHE);
