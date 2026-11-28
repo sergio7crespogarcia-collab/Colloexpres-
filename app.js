@@ -99,3 +99,69 @@ $("menuBtn").addEventListener("click", async () => {
   }catch(error){status.textContent=error.message;}
   finally{button.disabled=false;}
 });
+
+
+/* Book-style navigation: one screen per section, with page controls and swipe */
+(function setupBookNavigation(){
+  const home=document.getElementById("inicio");
+  const workspace=document.querySelector(".workspace");
+  const hero=document.querySelector(".hero");
+  const how=document.querySelector(".how");
+  if(!home||!workspace)return;
+  const pages=[];
+  function makePage(title,subtitle){
+    const page=document.createElement("section");
+    page.className="book-page";
+    page.innerHTML='<div class="book-page-heading"><span class="book-kicker">COLLOEXPRES</span><h2>'+title+'</h2><p>'+subtitle+'</p></div>';
+    return page;
+  }
+  const menuPage=makePage("Hacer menú","Ideas para organizar tus comidas y cenas.");
+  const weeklyPage=makePage("Menú semanal","Planifica los siete días de la semana.");
+  const comparePage=makePage("Comparación de supermercados","DIA · Eroski · Gadis · Familia y más.");
+  const basketPage=makePage("Cesta de la compra","Añade productos y organiza tu lista.");
+  menuPage.append(document.getElementById("hacer-menu"));
+  weeklyPage.append(document.getElementById("menuResults"));
+  // Keep the weekly menu generator together on its own page.
+  const weeklyPanel=document.createElement("div");
+  weeklyPanel.className="book-panel";
+  weeklyPanel.append(document.querySelector(".menu-panel .ai-heading"),document.querySelector(".menu-panel label"),document.getElementById("menuPrompt"),document.getElementById("menuBtn"),document.getElementById("menuStatus"),document.getElementById("menuResults"));
+  weeklyPage.append(weeklyPanel);
+  comparePage.append(document.getElementById("supermercados"),document.getElementById("results"));
+  basketPage.append(document.querySelector(".add-panel"),document.querySelector(".ai-panel"),document.querySelector(".list-area"),document.querySelector(".compare-row"));
+  pages.push(home,menuPage,weeklyPage,comparePage,basketPage);
+  const book=document.createElement("div");book.className="book-view";
+  const frame=document.createElement("div");frame.className="book-frame";
+  pages.forEach((page,i)=>{page.classList.add("book-page");page.dataset.page=String(i);frame.append(page);});
+  book.append(frame);
+  const controls=document.createElement("div");controls.className="book-controls";
+  controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><span class="book-page-count" aria-live="polite">1 / 5</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
+  book.append(controls);
+  document.querySelector("main").replaceChildren(book);
+  let current=0;
+  function show(index){
+    current=Math.max(0,Math.min(pages.length-1,index));
+    pages.forEach((page,i)=>{page.classList.toggle("active-page",i===current);page.setAttribute("aria-hidden",i===current?"false":"true");});
+    controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;
+    controls.querySelector(".book-prev").disabled=current===0;
+    controls.querySelector(".book-next").disabled=current===pages.length-1;
+    frame.style.setProperty("--page-index",current);
+    history.replaceState(null,"",current===0?"#inicio":"#pagina-"+(current+1));
+  }
+  const destinations={"#hacer-menu":1,"#menuResults":2,"#supermercados":3,"#lista":4,"#comparar":4,"#results":3};
+  document.addEventListener("click",e=>{
+    const link=e.target.closest('a[href^="#"]');
+    if(!link)return;
+    const target=link.getAttribute("href");
+    if(destinations[target]!==undefined){e.preventDefault();show(destinations[target]);}
+  });
+  controls.querySelector(".book-prev").addEventListener("click",()=>show(current-1));
+  controls.querySelector(".book-next").addEventListener("click",()=>show(current+1));
+  let startX=0,startY=0;
+  frame.addEventListener("touchstart",e=>{startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY;},{passive:true});
+  frame.addEventListener("touchend",e=>{
+    const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;
+    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25)show(current+(dx<0?1:-1));
+  },{passive:true});
+  document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(current+1);if(e.key==="ArrowLeft")show(current-1);});
+  show(0);
+})();
