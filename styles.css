@@ -706,3 +706,8 @@ footer{background:#073e78}
  .topbar .pepa-name{font-size:13px!important}
  .topbar .pepa-chat{right:-2px!important;width:min(350px,calc(100vw - 20px))!important}
 }
+
+/* Retrato ilustrado oficial de Pepa */
+.pepa-grandma img,.pepa-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.pepa-grandma{overflow:hidden;border-radius:50%}
+.pepa-voice-face .pepa-avatar{overflow:hidden}
