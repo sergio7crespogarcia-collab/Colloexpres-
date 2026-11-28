@@ -121,6 +121,8 @@ $("menuBtn").addEventListener("click", async () => {
   const menuPage=page("Hacer menú","Crea ideas de comidas con ayuda de la IA.");
   const comparePage=page("Comparación de supermercados","DIA · Eroski · Gadis · Familia y más.");
   const cameraPage=page("Cámara y marcas","Fotografía productos y compara sus formatos y precios.");
+  const flyersPage=page("Folletos y ofertas","Consulta los catálogos vigentes de supermercados en Vigo y alrededores.");
+  flyersPage.insertAdjacentHTML("beforeend",'<section class="flyers-panel"><p class="helper-status">Consulta folletos y promociones recientes de Carrefour, Lidl, Aldi, DIA, Eroski, Froiz, Gadis, Alcampo y otras cadenas. Las fechas y la disponibilidad pueden variar según la tienda.</p><a class="flyer-main-link" href="https://quecomprar.org/ofertas/vigo/" target="_blank" rel="noopener noreferrer"><span>📍</span><span><strong>Ofertas actuales en Vigo</strong><small>Folletos, productos y fechas de validez por supermercado</small></span><b>↗</b></a><a class="flyer-link" href="https://www.kimbino.es/ciudad/vigo/categoria/supermercados/" target="_blank" rel="noopener noreferrer"><span>📰</span><span><strong>Todos los folletos en Kimbino</strong><small>Catálogos de supermercados y tiendas en Vigo</small></span><b>↗</b></a><a class="flyer-link" href="https://www.ofertero.es/ofertas/vigo/supermercados/" target="_blank" rel="noopener noreferrer"><span>🏷️</span><span><strong>Más catálogos y promociones</strong><small>Otra recopilación de folletos vigentes en Vigo</small></span><b>↗</b></a><p class="flyer-note">Los enlaces abren páginas externas. COLLOEXPRES no controla sus publicaciones ni garantiza que cada oferta siga disponible; comprueba siempre la fecha y las condiciones del folleto.</p></section>');
   cameraPage.insertAdjacentHTML("beforeend",'<section class="camera-panel" id="cameraPanel"><div class="camera-intro"><span class="camera-emoji">📸🍎</span><div><h3>Foto del producto</h3><p>Saca una foto y COLLOEXPRES lo analizará automáticamente.</p></div></div><label class="camera-pick" for="productPhoto">📷 HACER FOTO DEL PRODUCTO</label><input id="productPhoto" type="file" accept="image/*" capture="environment" class="camera-input"><img id="photoPreview" class="photo-preview hidden" alt="Foto del producto"><div id="brandResult" class="camera-result" aria-live="polite">Haz una foto para empezar. No necesitas escribir nada.</div><p class="safety-note">La foto solo permite revisar señales visibles. No detecta bacterias ni puede garantizar que un alimento sea seguro. Si hay dudas, no lo consumas.</p></section>');
   menuPage.append(menu);
   weekly.append(ai);
@@ -128,7 +130,7 @@ $("menuBtn").addEventListener("click", async () => {
   comparePage.append(retailers,results);
   if(hero)hero.remove();
   workspace.remove();
-  const pages=[home,menuPage,weekly,comparePage,basket,cameraPage];
+  const pages=[home,menuPage,weekly,comparePage,basket,cameraPage,flyersPage];
   const book=document.createElement("div");book.className="book-view";
   const frame=document.createElement("div");frame.className="book-frame";
   pages.forEach((p,i)=>{
@@ -149,7 +151,7 @@ $("menuBtn").addEventListener("click", async () => {
   function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;window.scrollTo({top:0,behavior:"smooth"});}
   // Enlaces directos para que cada tarjeta abra su página, también en Safari iPhone.
   const homeCards=home.querySelectorAll(".main-menu-card");
-  const destinations=[1,2,3,4,5];
+  const destinations=[1,2,3,4,5,6];
   homeCards.forEach((card,index)=>card.addEventListener("click",event=>{
     event.preventDefault();
     show(destinations[index] ?? 1);
@@ -166,7 +168,7 @@ $("menuBtn").addEventListener("click", async () => {
   });
   controls.querySelector(".book-home").addEventListener("click",()=>show(0));
   // La barra inferior permanece visible y navega entre las páginas del libro.
-  const bottomDestinations={"#inicio":0,"#hacer-menu":1,"#supermercados":3,"#lista":4,"#camera":5};
+  const bottomDestinations={"#inicio":0,"#hacer-menu":1,"#supermercados":3,"#lista":4,"#camera":5,"#folletos":6};
   document.querySelectorAll(".bottom-nav-link").forEach(link=>link.addEventListener("click",event=>{
     const destination=bottomDestinations[link.getAttribute("href")];
     if(destination===undefined)return;
@@ -344,7 +346,7 @@ $("menuBtn").addEventListener("click", async () => {
       .catch(error=>{pending.remove();say(error.message);})
       .finally(()=>{send.disabled=false;send.textContent="Enviar";input.focus();});
   }
-  const pages={"inicio":"inicio","portada":"inicio","hacer menú":"hacer-menu","menú":"hacer-menu","menú semanal":"hacer-menu","planificador":"hacer-menu","comparación":"supermercados","supermercados":"supermercados","cesta":"lista","lista":"lista","compra":"lista","cámara":"camera"};
+  const pages={"inicio":"inicio","portada":"inicio","hacer menú":"hacer-menu","menú":"hacer-menu","menú semanal":"hacer-menu","planificador":"hacer-menu","comparación":"supermercados","supermercados":"supermercados","cesta":"lista","lista":"lista","compra":"lista","cámara":"camera","folletos":"folletos","ofertas":"folletos"};
   function say(text,who="bot"){const p=document.createElement("p");p.className="pepa-bubble "+(who==="user"?"pepa-user":"pepa-bot");p.textContent=text;messages.append(p);messages.scrollTop=messages.scrollHeight;}
   function goPage(destination){const bookPage=document.querySelector('.book-page[data-page="'+destination+'"]');if(bookPage){const n=Number(destination);document.querySelectorAll(".book-page").forEach((p,i)=>{p.classList.toggle("active-page",i===n);p.setAttribute("aria-hidden",i===n?"false":"true");});const count=document.querySelector(".book-page-count");if(count)count.textContent=(n+1)+" / "+document.querySelectorAll(".book-page").length;const prev=document.querySelector(".book-prev"),next=document.querySelector(".book-next");if(prev)prev.disabled=n===0;if(next)next.disabled=n===document.querySelectorAll(".book-page").length-1;return true;}const section=document.getElementById(String(destination));if(section){section.scrollIntoView({behavior:"smooth",block:"start"});return true;}return false;}
   function addProducts(products){let count=0;(products||[]).slice(0,35).forEach(item=>{const name=typeof item==="string"?item:[item.quantity,item.name,item.size].filter(Boolean).join(" ").trim();if(name){items.push({id:crypto.randomUUID?.()||String(Date.now()+Math.random()),name,done:false});count++;}});render();return count;}
