@@ -167,5 +167,29 @@ Incluye siete días y una lista de compra consolidada. No incluyas precios ni ma
   }
 });
 
+
+
+/* Pepa: asistente de COLLOEXPRES con acciones limitadas y confirmadas por el usuario */
+app.post("/api/pepa", async (req, res) => {
+  try {
+    const message = typeof req.body?.message === "string" ? req.body.message.trim() : "";
+    if (!message || message.length > 2000) return res.status(400).json({ error: "Escribe un mensaje de hasta 2.000 caracteres." });
+    if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: "Pepa aún no está activada: falta configurar OPENAI_API_KEY en Render." });
+    const contextItems = Array.isArray(req.body?.items) ? req.body.items.slice(0, 80).map(x => ({name:String(x.name||"").slice(0,100),done:!!x.done})) : [];
+    const page = String(req.body?.page || "0").slice(0,2);
+    const instructions = `Te llamas Pepa y eres la ayudante amable, clara y práctica de COLLOEXPRES, una app de menús y compras para España y Portugal. Habla siempre en español sencillo. Ayuda con planificación de menús, ideas de recetas, listas y navegación. No inventes precios, disponibilidad, vídeos concretos ni datos de supermercados. Para recetas de vídeo usa la acción show_youtube que abre resultados de YouTube. Puedes decidir una sola acción entre: navigate, add_items, generate_menu, show_youtube, show_list, none. Ejecuta solo acciones relacionadas con la petición explícita del usuario. No elimines ni marques productos como comprados. No prometas controlar otras apps ni enviar notificaciones nativas. Devuelve SOLO JSON: {"reply":"respuesta breve y útil","action":"none|navigate|add_items|generate_menu|show_youtube|show_list","parameters":{}}. navigate parameters.page debe ser uno de: inicio, hacer menú, menú semanal, comparación, cesta, cámara. add_items parameters.items es una lista de objetos {"name":"producto","quantity":"cantidad opcional"}. generate_menu parameters.prompt contiene las preferencias indicadas. show_youtube parameters.query contiene el plato. Si faltan datos esenciales, pregunta en reply y deja action none. `;
+    const upstream = await fetch(API_URL, {method:"POST",headers:{"Authorization":`Bearer ${process.env.OPENAI_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:MODEL,instructions,input:JSON.stringify({message,shopping_list:contextItems,current_page:page}),text:{format:{type:"json_object"}},max_output_tokens:700})});
+    const payload = await upstream.json();
+    if (!upstream.ok) return res.status(502).json({error:payload?.error?.message||"Pepa no pudo conectarse con la IA."});
+    const outputText=(payload.output||[]).flatMap(part=>part.content||[]).filter(part=>part.type==="output_text").map(part=>part.text).join("\n");
+    const parsed=JSON.parse(outputText||"{}");
+    const allowed=["navigate","add_items","generate_menu","show_youtube","show_list","none"];
+    return res.json({reply:String(parsed.reply||"Estoy aquí para ayudarte."),action:allowed.includes(parsed.action)?parsed.action:"none",parameters:parsed.parameters&&typeof parsed.parameters==="object"?parsed.parameters:{}});
+  } catch(err) {
+    console.error("Pepa assistant failed:",err.message);
+    return res.status(500).json({error:"No pude completar la petición. Inténtalo de nuevo."});
+  }
+});
+
 const port = Number(process.env.PORT || 10000);
 app.listen(port, "0.0.0.0", () => console.log(`COLLOEXPRES listening on port ${port}`));
