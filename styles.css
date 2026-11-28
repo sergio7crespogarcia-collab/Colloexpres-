@@ -961,3 +961,33 @@ body > #pepaChat.pepa-write-mode .pepa-form button{
     font-size:20px!important;
   }
 }
+
+
+/* Fix definitivo: campo de texto siempre ocupa una fila completa */
+body > #pepaChat.pepa-write-mode #pepaForm{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ grid-template-rows:auto auto!important;
+ align-items:stretch!important;
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ box-sizing:border-box!important;
+}
+body > #pepaChat.pepa-write-mode #pepaInput{
+ display:block!important;
+ grid-column:1/-1!important;
+ grid-row:1!important;
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ flex:none!important;
+ box-sizing:border-box!important;
+ white-space:normal!important;
+ overflow-wrap:normal!important;
+}
+body > #pepaChat.pepa-write-mode #pepaSend{grid-column:1!important;grid-row:2!important}
+body > #pepaChat.pepa-write-mode #pepaSpeakReplyText{grid-column:2!important;grid-row:2!important}
+body > #pepaChat.pepa-write-mode #pepaSwitchVoice{grid-column:3!important;grid-row:2!important}
+body > #pepaChat.pepa-write-mode #pepaVoiceControls{display:none!important}
+body > #pepaChat.pepa-write-mode #pepaModeChoice{display:none!important}
