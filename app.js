@@ -134,7 +134,7 @@ $("menuBtn").addEventListener("click", async () => {
   pages.forEach((p,i)=>{p.classList.add("book-page");p.dataset.page=i;frame.append(p);});
   book.append(frame);
   const controls=document.createElement("nav");controls.className="book-controls";controls.setAttribute("aria-label","Navegación de páginas");
-  controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><span class="book-page-count">1 / 6</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
+  controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><button type="button" class="book-home" aria-label="Volver al menú principal">⌂ Inicio</button><span class="book-page-count">1 / 6</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
   book.append(controls);main.replaceChildren(book);
   let current=0;
   function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;}
@@ -155,6 +155,15 @@ $("menuBtn").addEventListener("click", async () => {
       show(targets[target]);
     }
   });
+  controls.querySelector(".book-home").addEventListener("click",()=>show(0));
+  // La barra inferior permanece visible y navega entre las páginas del libro.
+  const bottomDestinations={"#inicio":0,"#hacer-menu":1,"#supermercados":3,"#lista":4,"#camera":5};
+  document.querySelectorAll(".bottom-nav-link").forEach(link=>link.addEventListener("click",event=>{
+    const destination=bottomDestinations[link.getAttribute("href")];
+    if(destination===undefined)return;
+    event.preventDefault();
+    show(destination);
+  }));
   controls.querySelector(".book-prev").addEventListener("click",()=>show(current-1));
   controls.querySelector(".book-next").addEventListener("click",()=>show(current+1));
   // También se puede pasar de hoja deslizando o tocando los bordes.
