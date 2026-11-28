@@ -478,20 +478,24 @@ main,.book-view,.book-frame,.book-page{width:100%!important;max-width:100%!impor
 @media(max-width:600px){.planner-fields{grid-template-columns:1fr}.menu-planner{padding:14px}.menu-planner h3{font-size:19px}}
 
 
-/* Asistente Pepa */
-.pepa-panel{position:fixed;right:18px;bottom:18px;z-index:1000;font-family:'DM Sans',sans-serif}
-.pepa-launcher{border:0;border-radius:999px;padding:15px 21px;background:#123b32;color:white;font:800 15px Manrope,sans-serif;box-shadow:0 8px 28px #123b3240;cursor:pointer}
-.pepa-chat{width:min(370px,calc(100vw - 28px));height:min(540px,calc(100dvh - 105px));display:flex;flex-direction:column;background:#fff;border:1px solid #dce8d8;border-radius:20px;box-shadow:0 15px 50px #123b3230;overflow:hidden;margin-bottom:10px}
-.pepa-head{display:flex;align-items:center;gap:11px;padding:14px;background:#123b32;color:white}
-.pepa-avatar{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#d9f36a;font-size:22px}
-.pepa-head strong,.pepa-head small{display:block}.pepa-head strong{font:800 16px Manrope}.pepa-head small{font-size:11px;color:#d0ded7;margin-top:3px}
-.pepa-head button{margin-left:auto;border:0;background:transparent;color:white;font-size:27px;cursor:pointer}
-.pepa-messages{padding:14px;overflow:auto;flex:1;background:#f7f7f1}
-.pepa-bubble{max-width:90%;padding:11px 13px;border-radius:14px;font-size:13px;line-height:1.5;white-space:pre-wrap}
-.pepa-bot{background:white;border:1px solid #e5e9e2;color:#26372e;margin:0 0 10px auto}
-.pepa-user{background:#e4f1d8;color:#193b2f;margin:0 0 10px auto}
-.pepa-form{display:flex;gap:8px;padding:12px;border-top:1px solid #e5e9e2}
-.pepa-form textarea{min-width:0;flex:1;resize:none;border:1px solid #dce5db;border-radius:10px;padding:10px;font:13px 'DM Sans'}
-.pepa-form button{border:0;border-radius:10px;padding:0 14px;background:#123b32;color:white;font-weight:700}
-.pepa-hint{font-size:10px;color:#718078;margin:0;padding:0 12px 10px}
-@media(max-width:480px){.pepa-panel{right:12px;bottom:12px}.pepa-launcher{padding:14px 18px}}
+/* Pepa: botón ilustrado y chat compacto */
+.pepa-panel{position:fixed;right:14px;bottom:14px;z-index:1000;font-family:'DM Sans',sans-serif}
+.pepa-launcher{display:flex;align-items:center;gap:8px;border:3px solid #fff;border-radius:999px;padding:5px 14px 5px 5px;background:#14543f;color:#fff;font:800 15px Manrope,sans-serif;box-shadow:0 5px 18px #123b3240;cursor:pointer}
+.pepa-grandma{display:block;width:62px;height:62px;flex:0 0 62px}
+.pepa-grandma svg{display:block;width:100%;height:100%}
+.pepa-name{padding-right:4px}
+.pepa-chat{width:min(350px,calc(100vw - 28px));height:min(440px,55dvh);min-height:320px;display:flex;flex-direction:column;background:#fff;border:1px solid #dce8d8;border-radius:18px;box-shadow:0 12px 38px #123b3230;overflow:hidden;margin-bottom:9px}
+.pepa-head{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#123b32;color:white;flex-shrink:0}
+.pepa-avatar{display:grid;place-items:center;width:43px;height:43px;flex:0 0 43px;border-radius:50%;overflow:hidden;background:#d9f36a}
+.pepa-avatar svg{width:100%;height:100%}
+.pepa-head strong,.pepa-head small{display:block}.pepa-head strong{font:800 15px Manrope}.pepa-head small{font-size:10px;color:#d0ded7;margin-top:2px}
+.pepa-head button{margin-left:auto;border:0;background:transparent;color:white;font-size:25px;cursor:pointer}
+.pepa-messages{padding:12px;overflow:auto;flex:1;background:#f7f7f1;min-height:0}
+.pepa-bubble{max-width:92%;padding:10px 12px;border-radius:13px;font-size:13px;line-height:1.45;white-space:pre-wrap}
+.pepa-bot{background:white;border:1px solid #e5e9e2;color:#26372e;margin:0 0 9px auto}
+.pepa-user{background:#e4f1d8;color:#193b2f;margin:0 0 9px auto}
+.pepa-form{display:flex;gap:7px;padding:9px;border-top:1px solid #e5e9e2;flex-shrink:0}
+.pepa-form textarea{min-width:0;flex:1;resize:none;border:1px solid #dce5db;border-radius:10px;padding:9px;font:13px 'DM Sans'}
+.pepa-form button{border:0;border-radius:10px;padding:0 12px;background:#123b32;color:white;font-weight:700}
+.pepa-hint{font-size:9px;color:#718078;margin:0;padding:0 10px 8px;flex-shrink:0}
+@media(max-width:480px){.pepa-panel{right:10px;bottom:10px}.pepa-grandma{width:58px;height:58px;flex-basis:58px}.pepa-chat{height:min(420px,54dvh);min-height:300px;width:calc(100vw - 20px)}}
