@@ -87,5 +87,39 @@ Máximo 35 productos. No incluyas precios. Si la petición no trata de compra, d
   }
 });
 
+
+app.post("/api/generate-menu", async (req, res) => {
+  try {
+    const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
+    if (!prompt || prompt.length > 2000) return res.status(400).json({ error: "Describe el menú en un máximo de 2.000 caracteres." });
+    if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: "Falta configurar OPENAI_API_KEY en Render." });
+    const instructions = `Eres el planificador de comidas de COLLOEXPRES para hogares de España y Portugal.
+Crea un menú semanal de lunes a domingo con comida y cena. Adapta recetas, presupuesto, personas, alergias y preferencias indicadas por el usuario. Si faltan datos, propone platos sencillos, variados y económicos. No afirmes que un plato es apto para alergias si no puedes garantizarlo; indica que hay que revisar etiquetas y contaminación cruzada.
+Devuelve exclusivamente JSON con esta forma:
+{"summary":"resumen breve","days":[{"day":"Lunes","lunch":"plato","dinner":"plato"}],"shopping_list":[{"name":"producto","quantity":"cantidad aproximada"}]}
+Incluye siete días y una lista de compra consolidada. No incluyas precios ni marcas.`;
+    const upstream = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL, instructions,
+        input: `Responde en formato JSON. Necesidades para el menú: ${prompt}`,
+        text: { format: { type: "json_object" } }, max_output_tokens: 2200
+      })
+    });
+    const payload = await upstream.json();
+    if (!upstream.ok) return res.status(502).json({ error: payload?.error?.message || "El proveedor de IA devolvió un error." });
+    const outputText = (payload.output || []).flatMap(part => part.content || []).filter(part => part.type === "output_text").map(part => part.text).join("\\n");
+    if (!outputText) return res.status(502).json({ error: "La IA no devolvió un menú utilizable." });
+    const parsed = JSON.parse(outputText);
+    const days = Array.isArray(parsed.days) ? parsed.days.slice(0, 7) : [];
+    const shopping_list = Array.isArray(parsed.shopping_list) ? parsed.shopping_list.slice(0, 60).filter(x => x && typeof x.name === "string" && x.name.trim()) : [];
+    return res.json({ summary: String(parsed.summary || "Menú semanal preparado."), days, shopping_list });
+  } catch (err) {
+    console.error("Menu generation failed:", err.message);
+    return res.status(500).json({ error: "No se pudo generar el menú. Inténtalo de nuevo." });
+  }
+});
+
 const port = Number(process.env.PORT || 10000);
 app.listen(port, "0.0.0.0", () => console.log(`COLLOEXPRES listening on port ${port}`));
