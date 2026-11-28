@@ -136,11 +136,28 @@ $("menuBtn").addEventListener("click", async () => {
   book.append(controls);main.replaceChildren(book);
   let current=0;
   function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;}
+  // Enlaces directos para que cada tarjeta abra su página, también en Safari iPhone.
+  const homeCards=home.querySelectorAll(".main-menu-card");
+  const destinations=[1,2,3,4];
+  homeCards.forEach((card,index)=>card.addEventListener("click",event=>{
+    event.preventDefault();
+    show(destinations[index] ?? 1);
+  }));
   const targets={"#hacer-menu":1,"#menuResults":1,"#supermercados":3,"#lista":4,"#comparar":4,"#results":3};
-  main.addEventListener("click",e=>{const link=e.target.closest('a[href^="#"]');if(link&&targets[link.getAttribute("href")]!==undefined){e.preventDefault();show(targets[link.getAttribute("href")]);}});
+  main.addEventListener("click",event=>{
+    const link=event.target.closest('a[href^="#"]');
+    if(!link)return;
+    const target=link.getAttribute("href");
+    if(target==="#hacer-menu"||target==="#supermercados"||target==="#lista"){
+      event.preventDefault();
+      show(targets[target]);
+    }
+  });
   controls.querySelector(".book-prev").addEventListener("click",()=>show(current-1));
   controls.querySelector(".book-next").addEventListener("click",()=>show(current+1));
-  let x=0,y=0;frame.addEventListener("touchstart",e=>{x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;},{passive:true});
-  frame.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-x,dy=e.changedTouches[0].clientY-y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.3)show(current+(dx<0?1:-1));},{passive:true});
+  // También se puede pasar de hoja deslizando o tocando los bordes.
+  let x=0,y=0;
+  frame.addEventListener("touchstart",event=>{x=event.changedTouches[0].clientX;y=event.changedTouches[0].clientY;},{passive:true});
+  frame.addEventListener("touchend",event=>{const dx=event.changedTouches[0].clientX-x,dy=event.changedTouches[0].clientY-y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)show(current+(dx<0?1:-1));},{passive:true});
   show(0);
 })();
