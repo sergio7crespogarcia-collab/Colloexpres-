@@ -536,3 +536,31 @@ main,.book-view,.book-frame,.book-page{width:100%!important;max-width:100%!impor
 .pepa-voice-mode .pepa-voice-controls{border:0;background:#f7f7f1;padding:12px}
 .pepa-voice-mode .pepa-voice-status{text-align:center;background:#f7f7f1;padding:0 12px 12px}
 .pepa-voice-mode .pepa-chat{height:min(480px,65dvh)!important}
+
+
+/* Pepa: modo escritura a pantalla completa para facilitar la lectura */
+.pepa-chat.pepa-write-mode{
+ position:fixed!important;inset:0!important;z-index:1002!important;
+ width:100vw!important;height:100dvh!important;max-height:100dvh!important;min-height:100dvh!important;
+ margin:0!important;border:0!important;border-radius:0!important;
+ display:flex!important;background:#fff!important;
+}
+.pepa-write-mode .pepa-head{padding:16px 18px;min-height:76px}
+.pepa-write-mode .pepa-head strong{font-size:22px}
+.pepa-write-mode .pepa-head small{font-size:14px}
+.pepa-write-mode .pepa-messages{padding:22px 18px;flex:1;min-height:0;overflow-y:auto}
+.pepa-write-mode .pepa-bubble{max-width:96%;font-size:19px;line-height:1.6;padding:15px 17px;border-radius:16px}
+.pepa-write-mode .pepa-form{padding:14px;gap:10px;align-items:stretch}
+.pepa-write-mode .pepa-form textarea{font-size:19px;line-height:1.5;min-height:64px;padding:14px}
+.pepa-write-mode .pepa-form button{font-size:17px;min-width:92px}
+.pepa-write-mode .pepa-form #pepaSwitchVoice{background:#d9f36a;color:#123b32;min-width:112px}
+.pepa-write-mode .pepa-voice-status{font-size:14px;padding:5px 14px 12px}
+.pepa-write-mode .pepa-hint{font-size:12px;padding:0 14px 12px}
+@media(max-width:600px){
+ .pepa-write-mode .pepa-head{padding:calc(12px + env(safe-area-inset-top)) 15px 12px}
+ .pepa-write-mode .pepa-messages{padding:16px 13px}
+ .pepa-write-mode .pepa-bubble{font-size:18px}
+ .pepa-write-mode .pepa-form{padding:10px 10px calc(10px + env(safe-area-inset-bottom));flex-wrap:wrap}
+ .pepa-write-mode .pepa-form textarea{flex:1 1 100%;min-height:76px;font-size:18px}
+ .pepa-write-mode .pepa-form button{flex:1;min-height:50px}
+}
