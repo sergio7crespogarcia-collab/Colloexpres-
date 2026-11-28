@@ -73,7 +73,7 @@ app.post("/api/analyze-product", async (req, res) => {
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "COLLOEXPRES" }));
 
-const MODEL = process.env.OPENAI_MODEL || "gpt-6-luna";
+const MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
 const API_URL = "https://api.openai.com/v1/responses";
 
 app.post("/api/interpret-list", async (req, res) => {
