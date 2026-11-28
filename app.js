@@ -276,3 +276,39 @@ $("menuBtn").addEventListener("click", async () => {
     setTimeout(()=>clearInterval(check),15000);
   });
 })();
+
+
+/* PEPA: asistente conversacional y acciones dentro de COLLOEXPRES */
+(function setupPepa(){
+  if(document.getElementById("pepaAssistant"))return;
+  const panel=document.createElement("section");
+  panel.id="pepaAssistant";panel.className="pepa-panel";
+  panel.innerHTML='<button type="button" class="pepa-launcher" id="pepaLauncher" aria-expanded="false" aria-controls="pepaChat">💬 Habla con Pepa</button><div class="pepa-chat hidden" id="pepaChat"><header class="pepa-head"><span class="pepa-avatar">🌼</span><div><strong>Pepa</strong><small>Tu ayudante de COLLOEXPRES</small></div><button type="button" id="pepaClose" aria-label="Cerrar Pepa">×</button></header><div class="pepa-messages" id="pepaMessages" aria-live="polite"><p class="pepa-bubble pepa-bot">¡Hola! Soy Pepa 😊 Puedo ayudarte con menús, recetas, listas y navegar por la aplicación. ¿Qué hacemos?</p></div><form id="pepaForm" class="pepa-form"><textarea id="pepaInput" rows="2" maxlength="2000" placeholder="Dime qué necesitas…" aria-label="Mensaje para Pepa"></textarea><button type="submit" id="pepaSend">Enviar</button></form><p class="pepa-hint">Pepa solo realizará acciones dentro de COLLOEXPRES que tú le pidas.</p></div>';
+  document.body.append(panel);
+  const launcher=document.getElementById("pepaLauncher"),chat=document.getElementById("pepaChat"),messages=document.getElementById("pepaMessages"),input=document.getElementById("pepaInput"),form=document.getElementById("pepaForm"),send=document.getElementById("pepaSend");
+  const pages={"inicio":0,"portada":0,"hacer menú":1,"menú":1,"menú semanal":2,"planificador":2,"comparación":3,"supermercados":3,"cesta":4,"lista":4,"compra":4,"cámara":5};
+  function say(text,who="bot"){const p=document.createElement("p");p.className="pepa-bubble "+(who==="user"?"pepa-user":"pepa-bot");p.textContent=text;messages.append(p);messages.scrollTop=messages.scrollHeight;}
+  function goPage(n){const target=document.querySelector('.book-page[data-page="'+n+'"]');if(!target)return false;document.querySelectorAll(".book-page").forEach((p,i)=>{p.classList.toggle("active-page",i===n);p.setAttribute("aria-hidden",i===n?"false":"true");});const count=document.querySelector(".book-page-count");if(count)count.textContent=(n+1)+" / "+document.querySelectorAll(".book-page").length;const prev=document.querySelector(".book-prev"),next=document.querySelector(".book-next");if(prev)prev.disabled=n===0;if(next)next.disabled=n===document.querySelectorAll(".book-page").length-1;return true;}
+  function addProducts(products){let count=0;(products||[]).slice(0,35).forEach(item=>{const name=typeof item==="string"?item:[item.quantity,item.name,item.size].filter(Boolean).join(" ").trim();if(name){items.push({id:crypto.randomUUID?.()||String(Date.now()+Math.random()),name,done:false});count++;}});render();return count;}
+  async function handleAction(data){
+    const action=data.action||"none",params=data.parameters||{};
+    if(action==="navigate"){const key=String(params.page||"").toLowerCase();const n=pages[key];if(n===undefined)return "No reconozco esa sección. Puedo abrir menú, menú semanal, supermercados, cesta o cámara.";goPage(n);return "Te he llevado a "+key+".";}
+    if(action==="add_items"){const count=addProducts(params.items||[]);goPage(4);return count?"He añadido "+count+" productos a tu cesta.":"No recibí productos para añadir.";}
+    if(action==="generate_menu"){const prompt=String(params.prompt||"");if(!prompt)return "Dime para cuántas personas y qué preferencias tienes.";goPage(1);const field=document.getElementById("menuPrompt");if(field)field.value=prompt;const btn=document.getElementById("menuBtn");if(btn)btn.click();return "Estoy preparando tu menú. Lo verás en la sección Hacer menú.";}
+    if(action==="show_youtube"){const query=String(params.query||"");if(!query)return "Dime qué receta quieres ver.";const url="https://www.youtube.com/results?search_query="+encodeURIComponent(query+" receta paso a paso");window.open(url,"_blank","noopener");return "Te abrí YouTube con recetas de "+query+".";}
+    if(action==="show_list"){goPage(4);return "Aquí tienes tu cesta. Tienes "+items.length+" productos.";}
+    if(action==="none")return "";
+    return "Puedo ayudarte con menús, listas, recetas de YouTube y las secciones de la app.";
+  }
+  launcher.addEventListener("click",()=>{const open=chat.classList.toggle("hidden")===false;launcher.setAttribute("aria-expanded",String(open));if(open)input.focus();});
+  document.getElementById("pepaClose").addEventListener("click",()=>{chat.classList.add("hidden");launcher.setAttribute("aria-expanded","false");});
+  form.addEventListener("submit",async event=>{event.preventDefault();const prompt=input.value.trim();if(!prompt)return;say(prompt,"user");input.value="";send.disabled=true;send.textContent="…";say("Déjame ayudarte…");
+    const pending=messages.lastElementChild;
+    try{
+      const response=await fetch("/api/pepa",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:prompt,items:items.map(x=>({name:x.name,done:x.done})),page:document.querySelector(".book-page.active-page")?.dataset.page||"0"})});
+      const data=await response.json();if(!response.ok)throw new Error(data.error||"No pude responder ahora.");
+      const actionText=await handleAction(data);pending.remove();say([data.reply,actionText].filter(Boolean).join(" "));
+    }catch(error){pending.remove();say(error.message+" Comprueba que la IA esté activada en el servidor.");}
+    finally{send.disabled=false;send.textContent="Enviar";input.focus();}
+  });
+})();
