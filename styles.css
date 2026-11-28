@@ -991,3 +991,15 @@ body > #pepaChat.pepa-write-mode #pepaSpeakReplyText{grid-column:2!important;gri
 body > #pepaChat.pepa-write-mode #pepaSwitchVoice{grid-column:3!important;grid-row:2!important}
 body > #pepaChat.pepa-write-mode #pepaVoiceControls{display:none!important}
 body > #pepaChat.pepa-write-mode #pepaModeChoice{display:none!important}
+
+
+/* Página de folletos y ofertas */
+.flyers-panel{display:grid;gap:12px;margin-top:12px}
+.flyer-main-link,.flyer-link{display:flex;align-items:center;gap:13px;padding:16px;border:2px solid #dce8d8;border-radius:16px;background:#f7fbf3;color:#173b2d;text-decoration:none;min-width:0}
+.flyer-main-link{background:linear-gradient(120deg,#e5f7ce,#fff7d8);border-color:#c5dfae}
+.flyer-main-link>span:first-child,.flyer-link>span:first-child{font-size:30px;flex:0 0 38px;text-align:center}
+.flyer-main-link span:nth-child(2),.flyer-link span:nth-child(2){display:grid;gap:4px;min-width:0}
+.flyer-main-link strong,.flyer-link strong{font-size:17px;line-height:1.25}
+.flyer-main-link small,.flyer-link small{font-size:13px;line-height:1.35;color:#52665a}
+.flyer-main-link b,.flyer-link b{margin-left:auto;font-size:24px;color:#075b31}
+.flyer-note{font-size:12px;line-height:1.5;color:#68776d;margin:6px 2px}
