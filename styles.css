@@ -1026,3 +1026,23 @@ body{position:relative!important;isolation:isolate;background:#f4f6fa!important}
  .brand-wall-row{gap:15px}
  .brand-wall-row span{font-size:clamp(18px,5vw,27px);padding:3px 5px}
 }
+
+
+/* Logotipos originales como imágenes, no nombres recreados */
+.brand-wall{opacity:.13!important;background:#f4f6fa!important;gap:clamp(28px,7vh,82px)!important}
+.brand-wall-row{align-items:center!important;gap:clamp(22px,5vw,64px)!important}
+.brand-wall-row .brand-logo{
+ display:block!important;flex:0 0 auto!important;
+ width:clamp(76px,14vw,150px)!important;height:clamp(42px,8vw,82px)!important;
+ max-width:22vw!important;object-fit:contain!important;
+ padding:4px!important;background:transparent!important;
+ border:0!important;border-radius:0!important;
+ text-shadow:none!important;filter:saturate(1)!important;
+}
+.brand-wall-row .logo-lidl,.brand-wall-row .logo-aldi{width:clamp(58px,10vw,105px)!important;height:clamp(58px,10vw,105px)!important}
+@media(max-width:600px){
+ .brand-wall{opacity:.11!important;gap:36px!important}
+ .brand-wall-row{gap:18px!important}
+ .brand-wall-row .brand-logo{width:clamp(68px,19vw,100px)!important;height:clamp(42px,12vw,64px)!important;max-width:22vw!important}
+ .brand-wall-row .logo-lidl,.brand-wall-row .logo-aldi{width:clamp(52px,15vw,78px)!important;height:clamp(52px,15vw,78px)!important}
+}
