@@ -459,3 +459,5 @@ main,.book-view,.book-frame,.book-page{width:100%!important;max-width:100%!impor
    Su diseño grid tenía más especificidad que la regla general de páginas. */
 .book-page[data-page="0"].home-menu:not(.active-page){display:none!important}
 .book-page[data-page="0"].home-menu.active-page{display:grid!important}
+
+.price-unavailable{padding:12px;border-radius:12px;background:#fff0d8;color:#70410f;font-weight:800}.camera-result h3{margin:0 0 8px;font-size:22px;color:#075b31}.camera-result ul{padding-left:24px}
