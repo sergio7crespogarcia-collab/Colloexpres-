@@ -499,3 +499,17 @@ main,.book-view,.book-frame,.book-page{width:100%!important;max-width:100%!impor
 .pepa-form button{border:0;border-radius:10px;padding:0 12px;background:#123b32;color:white;font-weight:700}
 .pepa-hint{font-size:9px;color:#718078;margin:0;padding:0 10px 8px;flex-shrink:0}
 @media(max-width:480px){.pepa-panel{right:10px;bottom:10px}.pepa-grandma{width:58px;height:58px;flex-basis:58px}.pepa-chat{height:min(420px,54dvh);min-height:300px;width:calc(100vw - 20px)}}
+
+
+/* Selector de conversación, dictado y cierre fiable del chat */
+.pepa-chat.hidden{display:none!important}
+.pepa-mode-choice{padding:12px 13px 8px;background:#f7f7f1;border-bottom:1px solid #e5e9e2}
+.pepa-mode-choice p{font-size:13px;font-weight:700;color:#244437;margin:0 0 9px}
+.pepa-mode-choice>div{display:flex;gap:8px}
+.pepa-mode-choice button,.pepa-voice-controls button{flex:1;min-height:42px;border:0;border-radius:11px;padding:9px 12px;background:#14543f;color:white;font:700 13px 'DM Sans';cursor:pointer}
+.pepa-mode-choice button:last-child,.pepa-voice-controls button:first-child{background:#d9f36a;color:#123b32}
+.pepa-voice-controls{display:flex;gap:8px;padding:10px;border-top:1px solid #e5e9e2;flex-shrink:0}
+.pepa-voice-controls button:last-child{background:#e9eee8;color:#244437}
+.pepa-voice-status{font-size:11px;color:#53635a;padding:0 12px 7px;margin:0;flex-shrink:0}
+.pepa-chat{height:min(460px,58dvh);min-height:300px}
+@media(max-width:480px){.pepa-chat{height:min(440px,58dvh);min-height:290px}}
