@@ -1003,3 +1003,26 @@ body > #pepaChat.pepa-write-mode #pepaModeChoice{display:none!important}
 .flyer-main-link small,.flyer-link small{font-size:13px;line-height:1.35;color:#52665a}
 .flyer-main-link b,.flyer-link b{margin-left:auto;font-size:24px;color:#075b31}
 .flyer-note{font-size:12px;line-height:1.5;color:#68776d;margin:6px 2px}
+
+
+/* Fondo global con marcas de supermercados, discreto y detrás de toda la app */
+body{position:relative!important;isolation:isolate;background:#f4f6fa!important}
+.brand-wall{
+ position:fixed;inset:0;z-index:-1;display:flex;flex-direction:column;
+ justify-content:space-around;gap:clamp(24px,6vh,70px);overflow:hidden;
+ padding:24px 0;pointer-events:none;opacity:.12;
+ background:linear-gradient(135deg,#f7fafc,#eef4f2);
+}
+.brand-wall-row{display:flex;align-items:center;justify-content:space-around;gap:28px;width:125%;margin-left:-12%;transform:rotate(-8deg);white-space:nowrap}
+.brand-wall-row:nth-child(even){transform:rotate(7deg) translateX(-4%)}
+.brand-wall-row span{display:inline-block;font-family:Arial,sans-serif;font-size:clamp(20px,4vw,42px);font-weight:900;letter-spacing:-1.5px;padding:4px 9px;text-shadow:0 1px 0 #fff}
+.brand-carrefour{color:#0756a5}.brand-lidl{color:#0050aa;background:#ffdf00;border-radius:5px}
+.brand-aldi{color:#0756a5}.brand-dia{color:#e31d3b}
+.brand-eroski{color:#e31d3b}.brand-froiz{color:#168447}
+.brand-gadis{color:#168447}.brand-alcampo{color:#e21d35}
+.topbar,main,.bottom-nav,footer{position:relative;z-index:1}
+@media(max-width:600px){
+ .brand-wall{opacity:.10;gap:34px}
+ .brand-wall-row{gap:15px}
+ .brand-wall-row span{font-size:clamp(18px,5vw,27px);padding:3px 5px}
+}
