@@ -526,3 +526,13 @@ main,.book-view,.book-frame,.book-page{width:100%!important;max-width:100%!impor
 .pepa-name{display:none!important}
 .pepa-chat{width:min(340px,calc(100vw - 24px))!important;max-height:66dvh!important;height:min(420px,66dvh)!important;min-height:260px!important}
 @media(max-width:600px){.home-pepa{width:min(220px,58vw);margin:2px auto 7px}.home-pepa svg{max-height:175px}.home-pepa span{font-size:12px}.pepa-chat{height:min(390px,62dvh)!important;min-height:250px!important}}
+
+/* Modo conversación: Pepa aparece solo como rostro y controles de voz */
+.pepa-voice-face{display:none;flex:1;min-height:0;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:radial-gradient(circle at 50% 40%,#f1f7df,#f7f7f1 68%);color:#14543f;font-weight:800;text-align:center;padding:18px}
+.pepa-voice-face .pepa-avatar{width:min(190px,48vw);height:min(190px,48vw);flex:0 0 auto;border:7px solid white;border-radius:50%;box-shadow:0 8px 28px #123b3230}
+.pepa-voice-face .pepa-avatar svg{width:100%;height:100%}
+.pepa-voice-mode .pepa-head,.pepa-voice-mode .pepa-mode-choice,.pepa-voice-mode .pepa-messages,.pepa-voice-mode .pepa-form,.pepa-voice-mode .pepa-hint{display:none!important}
+.pepa-voice-mode .pepa-voice-face{display:flex}
+.pepa-voice-mode .pepa-voice-controls{border:0;background:#f7f7f1;padding:12px}
+.pepa-voice-mode .pepa-voice-status{text-align:center;background:#f7f7f1;padding:0 12px 12px}
+.pepa-voice-mode .pepa-chat{height:min(480px,65dvh)!important}
