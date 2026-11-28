@@ -786,3 +786,17 @@ body>.pepa-chat:not(.hidden) .pepa-mode-choice p{font-size:19px!important}
 body>.pepa-chat:not(.hidden) .pepa-mode-choice button{min-height:56px!important;font-size:17px!important}
 body>.pepa-chat:not(.hidden) .pepa-form,
 body>.pepa-chat:not(.hidden) .pepa-voice-controls{padding:14px 14px calc(14px + env(safe-area-inset-bottom))!important}
+
+
+/* Pepa: escritura y conversación con tamaño cómodo, similar a ChatGPT */
+body>.pepa-chat.pepa-write-mode{font-size:18px!important}
+body>.pepa-chat.pepa-write-mode .pepa-messages{padding:22px clamp(16px,4vw,28px)!important}
+body>.pepa-chat.pepa-write-mode .pepa-bubble{font-size:19px!important;line-height:1.6!important;padding:16px 18px!important;max-width:92%!important}
+body>.pepa-chat.pepa-write-mode .pepa-form{gap:10px!important;padding:16px!important}
+body>.pepa-chat.pepa-write-mode .pepa-form textarea{font:19px/1.55 'DM Sans',sans-serif!important;min-height:76px!important;padding:16px!important;border-radius:18px!important}
+body>.pepa-chat.pepa-write-mode .pepa-form button{font-size:17px!important;min-height:52px!important;border-radius:14px!important}
+body>.pepa-chat.pepa-write-mode .pepa-voice-status{font-size:15px!important}
+@media(max-width:600px){
+ body>.pepa-chat.pepa-write-mode .pepa-bubble{font-size:18px!important}
+ body>.pepa-chat.pepa-write-mode .pepa-form textarea{font-size:18px!important;min-height:82px!important}
+}
