@@ -336,3 +336,39 @@ main{height:100dvh!important}
  .book-page[data-page="0"] .home-menu:before,.book-page[data-page="0"] .home-menu:after{font-size:34px}
  .book-page[data-page="0"] .main-menu-card{padding-top:62px!important}
 }
+
+
+/* Ajuste fino móvil: evitar recortes en la portada */
+html,body{width:100%;max-width:100%;overflow:hidden!important}
+main,.book-view,.book-frame,.book-page{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.book-page[data-page="0"]{overflow:hidden!important}
+.book-page[data-page="0"] .home-menu{
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ margin:0!important;padding-left:clamp(14px,4vw,28px)!important;padding-right:clamp(14px,4vw,28px)!important;
+ box-sizing:border-box!important
+}
+.book-page[data-page="0"] .home-actions{right:clamp(18px,5vw,34px)!important;left:auto!important}
+.book-page[data-page="0"] .cb-logo{max-width:78vw!important}
+.book-page[data-page="0"] .home-wordmark{max-width:100%;text-align:center;white-space:nowrap}
+.book-page[data-page="0"] .main-menu-grid{
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ box-sizing:border-box!important
+}
+.book-page[data-page="0"] .main-menu-card{
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ box-sizing:border-box!important;padding-left:10px!important;padding-right:10px!important;
+ text-align:left!important;overflow:hidden!important
+}
+.book-page[data-page="0"] .main-menu-card strong,
+.book-page[data-page="0"] .main-menu-card small{
+ display:block!important;width:100%!important;min-width:0!important;
+ overflow-wrap:anywhere!important;word-break:normal!important
+}
+@media(max-width:600px){
+ .book-page[data-page="0"] .home-menu{padding-left:14px!important;padding-right:14px!important}
+ .book-page[data-page="0"] .main-menu-card{padding-top:72px!important;padding-bottom:13px!important}
+ .book-page[data-page="0"] .main-menu-card strong{font-size:clamp(13px,3.8vw,17px)!important}
+ .book-page[data-page="0"] .main-menu-card small{font-size:clamp(10px,2.9vw,13px)!important}
+ .book-page[data-page="0"] .menu-card-icon{left:11px!important}
+}
