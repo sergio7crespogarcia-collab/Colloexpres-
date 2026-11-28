@@ -647,3 +647,13 @@ footer{background:#073e78}
  .bottom-nav-link:active,.bottom-nav-link:focus{color:#0756a5}
 }
 @media(min-width:651px){.bottom-nav{display:flex;justify-content:center;gap:12px;margin:0 auto 26px}.bottom-nav-link{display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:24px;background:#fff;border:1px solid #e3e9f0;color:#0756a5;text-decoration:none;font-weight:700}.bottom-nav-link span{font-size:17px}.bottom-nav-link small{font-size:12px}}
+
+
+/* Navegación clara: acceso permanente al menú principal desde cualquier página */
+.book-controls{gap:10px}
+.book-controls .book-home{width:auto;min-width:112px;height:44px;padding:0 15px;border-radius:24px;background:#eaf2fb;color:#0756a5;font-size:15px;font-weight:800;box-shadow:none}
+.book-controls .book-home:active{background:#d8e8f8}
+@media(max-width:600px){
+ .book-controls{gap:7px}
+ .book-controls .book-home{min-width:100px;height:42px;font-size:14px;padding:0 11px}
+}
