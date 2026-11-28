@@ -277,3 +277,62 @@ button,a,input[type="checkbox"]{touch-action:manipulation}
 .book-page-heading{border-bottom:1px solid #c6dcb477!important}
 .book-page-count{background:#ffffff77!important;border:1px solid #ffffffbb!important}
 @media(max-width:600px){.book-frame{border-radius:24px}.book-page{background:linear-gradient(150deg,#fff9e8,#f5f7df 55%,#eaf5d9)}}
+
+
+/* Portada ilustrada COLLOEXPRES: composición inspirada en la referencia */
+.topbar{display:none!important}
+html,body{height:100%;overflow:hidden}
+main{height:100dvh!important}
+.book-view{height:100dvh!important;padding:0!important;background:linear-gradient(145deg,#8bcf39 0%,#e9f5b8 22%,#fff8dc 50%,#d8efb4 78%,#4cae35 100%)!important}
+.book-frame{max-width:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+.book-page{padding:0!important;border-radius:0!important;overflow:hidden!important}
+.book-page[data-page="0"]{background:
+ radial-gradient(ellipse at 50% 20%,#fffef2 0%,#fffbea 42%,#f6f9d9 75%,#d8efb4 100%)!important}
+.book-page[data-page="0"] .home-menu{
+ position:relative;min-height:100%!important;height:100%;margin:0!important;padding:clamp(8px,2vh,24px) clamp(12px,3vw,34px)!important;
+ display:flex;flex-direction:column;justify-content:space-between;gap:clamp(4px,1vh,14px);
+ background:transparent!important;overflow:hidden
+}
+.book-page[data-page="0"] .home-actions{top:clamp(12px,2vh,24px);right:clamp(16px,3vw,38px);gap:clamp(16px,3vw,30px)}
+.book-page[data-page="0"] .home-actions a{width:clamp(38px,6vh,58px);height:clamp(38px,6vh,58px);display:grid;place-items:center;border-radius:50%;background:#08713b;color:#fff;border:3px solid #fff;box-shadow:0 3px 8px #174b2822;font-size:clamp(21px,3.2vh,32px)}
+.book-page[data-page="0"] .cb-logo{width:min(60vw,410px);height:auto;aspect-ratio:520/360;margin:clamp(24px,5vh,55px) auto 0;filter:drop-shadow(0 6px 0 #ffffffaa)}
+.book-page[data-page="0"] .home-wordmark{font-size:clamp(32px,7vw,68px);letter-spacing:-2px;margin:0 auto clamp(2px,1vh,12px);color:#075b31;text-shadow:0 2px #fff}
+.book-page[data-page="0"] .home-wordmark em{color:#e99100}
+.book-page[data-page="0"] .home-menu:before{content:"👵🏻";position:absolute;left:clamp(4px,3vw,35px);top:clamp(14px,3vh,35px);font-size:clamp(42px,8vh,84px);filter:drop-shadow(0 5px 4px #526b2830);transform:rotate(-8deg)}
+.book-page[data-page="0"] .home-menu:after{content:"🛍️";position:absolute;right:clamp(4px,3vw,35px);top:clamp(58px,9vh,100px);font-size:clamp(40px,7vh,76px);filter:drop-shadow(0 5px 4px #526b2830);transform:rotate(7deg)}
+.book-page[data-page="0"] .main-menu-grid{width:100%;max-width:1120px;flex:1;min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(8px,1.5vh,17px);margin:0 auto}
+.book-page[data-page="0"] .main-menu-card{
+ min-height:0!important;height:100%;padding:clamp(10px,2vh,24px) clamp(10px,2vw,24px) clamp(10px,2vh,20px) clamp(82px,12vw,150px)!important;
+ border:3px solid #ffffffd9!important;border-radius:clamp(20px,3vw,34px)!important;
+ box-shadow:0 7px 0 #759b4530,0 10px 18px #486b2920!important;
+ justify-content:center;gap:clamp(3px,.8vh,9px);overflow:hidden
+}
+.book-page[data-page="0"] .menu-green{background:linear-gradient(145deg,#f0ffbd,#c8ee86)!important}
+.book-page[data-page="0"] .menu-yellow{background:linear-gradient(145deg,#fff5c4,#ffe27d)!important}
+.book-page[data-page="0"] .menu-blue{background:linear-gradient(145deg,#e1faff,#aee5f1)!important}
+.book-page[data-page="0"] .menu-peach{background:linear-gradient(145deg,#fff0df,#ffcba8)!important}
+.book-page[data-page="0"] .menu-card-icon{left:clamp(9px,1.7vw,22px)!important;top:50%!important;transform:translateY(-50%)!important;width:clamp(58px,9vw,112px)!important;height:clamp(58px,9vw,112px)!important;font-size:clamp(39px,6vw,72px)!important;filter:drop-shadow(0 4px 2px #47652b28)}
+.book-page[data-page="0"] .main-menu-card strong{font-size:clamp(14px,2.2vw,26px)!important;line-height:1.12!important;color:#06452b}
+.book-page[data-page="0"] .main-menu-card small{font-size:clamp(10px,1.35vw,16px)!important;line-height:1.25!important;color:#45584a}
+.book-page[data-page="0"] .main-menu-card b{right:clamp(8px,1.5vw,18px)!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;font-size:clamp(25px,4vw,42px)!important;color:#075b31}
+.book-controls{background:#ffffff55;border-radius:30px;padding:5px 14px;margin:0 auto max(5px,env(safe-area-inset-bottom))!important;backdrop-filter:blur(9px)}
+.book-controls button{background:linear-gradient(145deg,#16834d,#075b31)!important;border:2px solid #fff!important}
+@media(max-width:600px){
+ .book-page[data-page="0"] .home-menu{padding:7px 9px 9px!important;gap:6px}
+ .book-page[data-page="0"] .cb-logo{width:min(55vw,245px);margin-top:clamp(17px,4vh,34px)}
+ .book-page[data-page="0"] .home-wordmark{font-size:clamp(30px,8vw,43px);margin-bottom:2px}
+ .book-page[data-page="0"] .main-menu-grid{gap:7px}
+ .book-page[data-page="0"] .main-menu-card{padding:74px 9px 9px!important;border-radius:20px!important}
+ .book-page[data-page="0"] .menu-card-icon{top:7px!important;left:10px!important;transform:none!important;width:55px!important;height:55px!important;font-size:39px!important}
+ .book-page[data-page="0"] .main-menu-card strong{font-size:clamp(13px,4vw,17px)!important}
+ .book-page[data-page="0"] .main-menu-card small{font-size:clamp(10px,3vw,13px)!important}
+ .book-page[data-page="0"] .main-menu-card b{right:8px!important;bottom:5px!important;top:auto!important;transform:none!important;font-size:27px!important}
+ .book-page[data-page="0"] .home-menu:before{top:10px;font-size:43px}
+ .book-page[data-page="0"] .home-menu:after{top:38px;font-size:40px}
+ .book-controls{margin-bottom:4px!important}
+}
+@media(max-height:700px) and (max-width:600px){
+ .book-page[data-page="0"] .cb-logo{width:min(45vw,205px);margin-top:8px}
+ .book-page[data-page="0"] .home-menu:before,.book-page[data-page="0"] .home-menu:after{font-size:34px}
+ .book-page[data-page="0"] .main-menu-card{padding-top:62px!important}
+}
