@@ -140,7 +140,7 @@ $("menuBtn").addEventListener("click", async () => {
   function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;}
   // Enlaces directos para que cada tarjeta abra su página, también en Safari iPhone.
   const homeCards=home.querySelectorAll(".main-menu-card");
-  const destinations=[1,2,3,4];
+  const destinations=[1,2,3,4,5];
   homeCards.forEach((card,index)=>card.addEventListener("click",event=>{
     event.preventDefault();
     show(destinations[index] ?? 1);
