@@ -14,12 +14,24 @@
 <body>
   <header class="topbar"><a class="brand" href="#" aria-label="COLLOEXPRES"><img class="brand-logo" src="logo-colloexpres.svg" alt=""><span>COLLO<span class="brand-light">EXPRES</span></span></a><span class="beta">PRIMERA VERSIÓN</span></header>
   <main>
+    <section class="home-menu" id="inicio">
+      <img class="home-logo" src="logo-colloexpres.svg" alt="Logo COLLOEXPRES">
+      <p class="eyebrow">BIENVENIDO A</p>
+      <h1>COLLO<span>EXPRES</span></h1>
+      <p class="home-intro">Tu compra organizada, en un solo lugar.</p>
+      <nav class="main-menu-grid" aria-label="Menú principal">
+        <a class="main-menu-card" href="#lista"><span class="menu-card-icon">🛒</span><strong>Mi lista</strong><small>Añade y organiza productos</small><b>Entrar →</b></a>
+        <a class="main-menu-card" href="#menu"><span class="menu-card-icon">🍲</span><strong>Menú semanal</strong><small>Prepara comidas para 7 días</small><b>Entrar →</b></a>
+        <a class="main-menu-card" href="#supermercados"><span class="menu-card-icon">🏪</span><strong>Supermercados</strong><small>DIA, Eroski, Gadis y más</small><b>Ver tiendas →</b></a>
+        <a class="main-menu-card" href="#comparar"><span class="menu-card-icon">€</span><strong>Comparar cesta</strong><small>Consulta la comparación disponible</small><b>Comparar →</b></a>
+      </nav>
+    </section>
     <section class="hero"><div class="hero-copy"><p class="eyebrow">COMPRA CON CABEZA</p><h1>Tu cesta.<br><em>Mejor comparada.</em></h1><p class="hero-sub">Organiza tu compra, compara alternativas y descubre dónde podrías ahorrar.</p></div><div class="hero-art" aria-hidden="true"><div class="basket">🛒</div></div></section>
-    <section class="workspace">
+    <section class="workspace" id="lista">
       <div class="section-head"><div><p class="eyebrow">TU COMPRA</p><h2>Prepara tu lista</h2></div><button class="text-button" id="clearBtn">Vaciar lista</button></div>
       <div class="add-panel"><label for="productInput">¿Qué necesitas comprar?</label><div class="input-row"><input id="productInput" type="text" placeholder="Ej. 2 litros de leche, 1 kg de arroz…" autocomplete="off"><button class="add-btn" id="addBtn" aria-label="Añadir producto">+</button></div><div class="quick-add"><span>Añadir rápido:</span><button data-item="Leche 1 L">Leche</button><button data-item="Huevos 12 ud.">Huevos</button><button data-item="Arroz 1 kg">Arroz</button><button data-item="Aceite de oliva 1 L">Aceite</button></div></div>
       <div class="ai-panel"><div class="ai-heading"><span class="ai-icon">✦</span><div><strong>Asistente IA de COLLOEXPRES</strong><small>Cuéntame qué necesitas y organizaré tu compra.</small></div><span class="ai-chip">IA</span></div><label for="aiPrompt">Describe tu compra con tus palabras</label><textarea id="aiPrompt" rows="3" placeholder="Ej. Compra para 4 personas durante una semana: desayunos, cenas sencillas, fruta, leche y productos de limpieza."></textarea><div class="ai-actions"><span id="aiStatus" aria-live="polite">La IA necesita configurar una clave API en el servidor.</span><button id="aiBtn" class="primary-btn">Organizar con IA ✦</button></div></div>
-      <section class="menu-panel">
+      <section class="menu-panel" id="menu">
         <div class="ai-heading"><span class="ai-icon">🍲</span><div><strong>Menú semanal con IA</strong><small>Planifica comidas y cenas y crea la lista de compra.</small></div></div>
         <label for="menuPrompt">¿Para cuántas personas y qué preferencias tienes?</label>
         <textarea id="menuPrompt" rows="3" placeholder="Ej. 2 adultos y 2 niños, menú económico, recetas gallegas, sin pescado, comidas y cenas."></textarea>
@@ -27,7 +39,7 @@
         <p id="menuStatus" class="helper-status" aria-live="polite">La IA preparará 14 platos y una lista de ingredientes.</p>
         <div id="menuResults" class="menu-results hidden"></div>
       </section>
-      <section class="retailers-panel">
+      <section class="retailers-panel" id="supermercados">
         <div><p class="eyebrow">SUPERMERCADOS</p><h3>¿Dónde compras normalmente?</h3><p class="helper-status">Selecciona tus tiendas para preparar futuras comparaciones por código postal.</p></div>
         <div class="retailer-grid">
           <label><input type="checkbox" name="retailer" value="DIA"> DIA</label>
@@ -45,7 +57,7 @@
         <p class="helper-status">Importante: seleccionar una tienda no significa que sus precios estén conectados todavía. No mostraremos precios inventados.</p>
       </section>
       <div class="list-area"><div class="list-title"><h3>Mi lista <span id="itemCount">0</span></h3><span class="muted">Edita o elimina productos</span></div><ul id="shoppingList" class="shopping-list"><li class="empty-state">Tu lista está vacía. Añade el primer producto para empezar.</li></ul></div>
-      <div class="compare-row"><div><strong>¿Todo listo?</strong><p>Compara el coste estimado de tu cesta.</p></div><button id="compareBtn" class="primary-btn">Comparar mi cesta →</button></div>
+      <div class="compare-row" id="comparar"><div><strong>¿Todo listo?</strong><p>Compara el coste estimado de tu cesta.</p></div><button id="compareBtn" class="primary-btn">Comparar mi cesta →</button></div>
     </section>
     <section id="results" class="results hidden"><div class="section-head"><div><p class="eyebrow">TIENDAS SELECCIONADAS</p><h2>Tu cesta comparada</h2></div><span class="demo-tag">SIN PRECIOS REALES</span></div><div class="notice">Todavía no hay conexión de precios en tiempo real. Esta sección muestra las tiendas seleccionadas, pero no inventa importes ni ofertas.</div><div id="storeResults" class="store-grid"></div><div class="saving-card" id="savingCard"></div><div class="result-foot">La comparación real se activará cuando conectemos fuentes de precios autorizadas y datos de tienda o código postal.</div></section>
     <section class="how"><p class="eyebrow">HECHA PARA AHORRAR</p><h2>Una compra más inteligente.</h2><div class="feature-grid"><article><span>✦</span><h3>Entiende tu lista</h3><p>Escribe como hablas: cantidades, formatos y productos habituales.</p></article><article><span>⇄</span><h3>Compara equivalentes</h3><p>La aplicación distinguirá coincidencias exactas de alternativas similares.</p></article><article><span>€</span><h3>Calcula el ahorro</h3><p>Compara el coste total de la cesta, no solo productos sueltos.</p></article></div></section>
