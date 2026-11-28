@@ -224,3 +224,32 @@ button,a,input[type="checkbox"]{touch-action:manipulation}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
+
+/* Fondo y botones alegres, suaves y coordinados */
+:root{--cream:#fff9e9;--green:#075b39;--green2:#0b7048;--lime:#d9f36a;--ink:#183b2c;--line:#e5e6c9}
+.book-view{background:#eaf5d9}
+.book-frame{background:#fff9e9;border:3px solid #d8eabf;box-shadow:0 8px 0 #b8d59d,0 14px 30px #31552a18}
+.book-page{background:radial-gradient(circle at 8% 8%,#fff0b8 0 34px,transparent 35px),radial-gradient(circle at 94% 88%,#dff3d2 0 48px,transparent 49px),linear-gradient(145deg,#fffdf4,#f4f9e9)}
+.book-page-heading{border-bottom:2px dashed #c8dcb8}
+.book-page-heading h2{color:#075b39}.book-page-heading p{color:#496858}
+.book-page .home-menu{background:transparent}
+.home-menu{background:linear-gradient(145deg,#fff9e8 0%,#eff9df 55%,#fff4d8 100%)}
+.home-menu .main-menu-card{border:3px solid #fff;box-shadow:0 5px 0 #31552a18,0 8px 18px #31552a0b;transition:transform .16s ease,box-shadow .16s ease}
+.home-menu .main-menu-card:active{transform:scale(.98)}
+.home-menu .menu-green{background:linear-gradient(135deg,#e5f8c9,#c9edaa)}
+.home-menu .menu-yellow{background:linear-gradient(135deg,#fff3c9,#ffe39b)}
+.home-menu .menu-blue{background:linear-gradient(135deg,#e0f5fb,#bce7f1)}
+.home-menu .menu-peach{background:linear-gradient(135deg,#ffebdc,#ffd4b9)}
+.home-menu .menu-card-icon{filter:drop-shadow(0 3px 0 #ffffffaa)}
+.book-panel,.add-panel,.ai-panel,.menu-panel,.retailers-panel{border:2px solid #e3edcf;background:linear-gradient(145deg,#fffdf4,#f1f8e8);box-shadow:0 5px 0 #b8d59d55}
+.input-row input,.ai-panel textarea,.menu-panel textarea{background:#fffef9;border:2px solid #c9dfb9;border-radius:16px}
+.primary-btn,.book-controls button{background:linear-gradient(145deg,#14834f,#075b39);border:2px solid #d4eea9;border-radius:18px;box-shadow:0 5px 0 #06452d}
+.primary-btn:active,.book-controls button:active{transform:translateY(3px);box-shadow:0 2px 0 #06452d}
+.add-btn{background:linear-gradient(145deg,#e8f77a,#c8e84d);border:2px solid #fff;border-radius:17px;box-shadow:0 4px 0 #9dbd3e}
+.quick-add button,.retailer-grid label{background:#fffdf3;border:2px solid #dce9c9;border-radius:16px}
+.shopping-list li{border-bottom:2px dotted #dce8cf}
+.day-card,.store-card,.feature-grid article{background:linear-gradient(145deg,#fffef8,#f0f8e8);border:2px solid #e1ebd2;border-radius:18px}
+.notice{background:#fff3ce;border:2px solid #f1d98e;border-radius:16px}
+.book-page-count{background:#fff8d9;border:2px solid #d9e9b9;border-radius:30px;padding:9px 16px}
+.book-controls button:disabled{opacity:.35;box-shadow:none}
+@media(max-width:600px){.book-view{background:#eaf5d9}.book-frame{border-radius:22px}.book-page{border-radius:18px}.home-menu .main-menu-card{border-radius:23px}.book-page-heading{padding-top:8px}}
