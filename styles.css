@@ -48,3 +48,20 @@ html{scroll-behavior:smooth}
 @media(max-width:480px){.home-menu{padding:34px 14px 25px;margin:18px 0}.home-logo{width:128px;height:128px}.main-menu-grid{gap:9px}.main-menu-card{min-height:145px;padding:14px}.main-menu-card strong{font-size:14px}.main-menu-card small{font-size:10px}}
 
 .home-logo-mark{display:grid;place-items:center;border-radius:34px;background:var(--lime);color:var(--green);font:800 100px/1 Manrope,sans-serif;box-shadow:0 10px 24px #123b3220}
+
+/* CB branded home screen */
+.home-menu{padding:34px 18px 28px;margin:24px 0 28px;background:#fff;border:0;box-shadow:0 12px 40px #123b3210}
+.cb-logo{position:relative;width:190px;height:170px;margin:0 auto 16px;display:grid;place-items:center}
+.cb-letters{display:flex;align-items:center;justify-content:center;font:900 126px/.9 Manrope,sans-serif;letter-spacing:-19px;color:var(--green)}
+.cb-letters b:last-child{color:#e69a00}
+.cb-cart{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);font-size:43px;background:#fff;border:5px solid white;border-radius:18px;line-height:1;padding:4px}
+.home-menu h1{font-size:clamp(35px,7vw,54px);margin-bottom:8px}
+.home-menu h1 span{color:#e69a00}
+.home-intro{font-size:14px;margin-bottom:25px}
+.main-menu-grid{max-width:900px;gap:14px}
+.main-menu-card{min-height:164px;padding:20px;border-radius:20px;border:0;box-shadow:0 6px 20px #122b1a10}
+.main-menu-card strong{font-size:16px}
+.main-menu-card small{font-size:12px;line-height:1.4}
+.menu-green{background:#e8f7d8}.menu-yellow{background:#fff1c9}.menu-blue{background:#dff3fb}.menu-peach{background:#ffeadb}
+.menu-green .menu-card-icon{background:#d5edbd}.menu-yellow .menu-card-icon{background:#ffe4a0}.menu-blue .menu-card-icon{background:#c7eaf6}.menu-peach .menu-card-icon{background:#ffd8c1}
+@media(max-width:480px){.home-menu{padding:26px 12px 18px}.cb-logo{width:155px;height:140px}.cb-letters{font-size:105px}.cb-cart{font-size:35px}.main-menu-grid{grid-template-columns:1fr 1fr;gap:9px}.main-menu-card{min-height:154px;padding:13px}.main-menu-card strong{font-size:14px}.main-menu-card small{font-size:10px}}
