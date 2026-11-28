@@ -15,15 +15,15 @@
   <header class="topbar"><a class="brand" href="#inicio" aria-label="COLLOEXPRES"><span class="brand-mark">C</span><span>COLLO<span class="brand-light">EXPRES</span></span></a><span class="beta">PRIMERA VERSIÓN</span></header>
   <main>
     <section class="home-menu" id="inicio">
-      <span class="home-logo home-logo-mark" aria-label="Logo COLLOEXPRES">C</span>
+      <div class="cb-logo" role="img" aria-label="Logo CB COLLOEXPRES"><span class="cb-letters"><b>C</b><b>B</b></span><span class="cb-cart">🛒</span></div>
       <p class="eyebrow">BIENVENIDO A</p>
       <h1>COLLO<span>EXPRES</span></h1>
-      <p class="home-intro">Tu compra organizada, en un solo lugar.</p>
+      <p class="home-intro">Tu compra organizada, tus menús y tus supermercados en un solo lugar.</p>
       <nav class="main-menu-grid" aria-label="Menú principal">
-        <a class="main-menu-card" href="#lista"><span class="menu-card-icon">🛒</span><strong>Mi lista</strong><small>Añade y organiza productos</small><b>Entrar →</b></a>
-        <a class="main-menu-card" href="#menu"><span class="menu-card-icon">🍲</span><strong>Menú semanal</strong><small>Prepara comidas para 7 días</small><b>Entrar →</b></a>
-        <a class="main-menu-card" href="#supermercados"><span class="menu-card-icon">🏪</span><strong>Supermercados</strong><small>DIA, Eroski, Gadis y más</small><b>Ver tiendas →</b></a>
-        <a class="main-menu-card" href="#comparar"><span class="menu-card-icon">€</span><strong>Comparar cesta</strong><small>Consulta la comparación disponible</small><b>Comparar →</b></a>
+        <a class="main-menu-card menu-green" href="#hacer-menu"><span class="menu-card-icon">🍳</span><strong>Hacer menú</strong><small>Ideas para tus comidas y cenas</small><b>Entrar →</b></a>
+        <a class="main-menu-card menu-yellow" href="#menuResults"><span class="menu-card-icon">📅</span><strong>Menú semanal</strong><small>Planifica los 7 días de la semana</small><b>Entrar →</b></a>
+        <a class="main-menu-card menu-blue" href="#supermercados"><span class="menu-card-icon">🏪</span><strong>Comparación de supermercados</strong><small>DIA, Eroski, Gadis, Familia y más</small><b>Entrar →</b></a>
+        <a class="main-menu-card menu-peach" href="#lista"><span class="menu-card-icon">🛒</span><strong>Cesta de la compra</strong><small>Añade y organiza tus productos</small><b>Entrar →</b></a>
       </nav>
     </section>
     <section class="hero"><div class="hero-copy"><p class="eyebrow">COMPRA CON CABEZA</p><h1>Tu cesta.<br><em>Mejor comparada.</em></h1><p class="hero-sub">Organiza tu compra, compara alternativas y descubre dónde podrías ahorrar.</p></div><div class="hero-art" aria-hidden="true"><div class="basket">🛒</div></div></section>
@@ -31,11 +31,11 @@
       <div class="section-head"><div><p class="eyebrow">TU COMPRA</p><h2>Prepara tu lista</h2></div><button class="text-button" id="clearBtn">Vaciar lista</button></div>
       <div class="add-panel"><label for="productInput">¿Qué necesitas comprar?</label><div class="input-row"><input id="productInput" type="text" placeholder="Ej. 2 litros de leche, 1 kg de arroz…" autocomplete="off"><button class="add-btn" id="addBtn" aria-label="Añadir producto">+</button></div><div class="quick-add"><span>Añadir rápido:</span><button data-item="Leche 1 L">Leche</button><button data-item="Huevos 12 ud.">Huevos</button><button data-item="Arroz 1 kg">Arroz</button><button data-item="Aceite de oliva 1 L">Aceite</button></div></div>
       <div class="ai-panel"><div class="ai-heading"><span class="ai-icon">✦</span><div><strong>Asistente IA de COLLOEXPRES</strong><small>Cuéntame qué necesitas y organizaré tu compra.</small></div><span class="ai-chip">IA</span></div><label for="aiPrompt">Describe tu compra con tus palabras</label><textarea id="aiPrompt" rows="3" placeholder="Ej. Compra para 4 personas durante una semana: desayunos, cenas sencillas, fruta, leche y productos de limpieza."></textarea><div class="ai-actions"><span id="aiStatus" aria-live="polite">La IA necesita configurar una clave API en el servidor.</span><button id="aiBtn" class="primary-btn">Organizar con IA ✦</button></div></div>
-      <section class="menu-panel" id="menu">
-        <div class="ai-heading"><span class="ai-icon">🍲</span><div><strong>Menú semanal con IA</strong><small>Planifica comidas y cenas y crea la lista de compra.</small></div></div>
+      <section class="menu-panel" id="hacer-menu">
+        <div class="ai-heading"><span class="ai-icon">🍲</span><div><strong>Hacer menú con IA</strong><small>Planifica comidas y cenas y crea la lista de compra.</small></div></div>
         <label for="menuPrompt">¿Para cuántas personas y qué preferencias tienes?</label>
         <textarea id="menuPrompt" rows="3" placeholder="Ej. 2 adultos y 2 niños, menú económico, recetas gallegas, sin pescado, comidas y cenas."></textarea>
-        <button id="menuBtn" class="primary-btn">Crear menú de 7 días</button>
+        <button id="menuBtn" class="primary-btn">Crear menú semanal</button>
         <p id="menuStatus" class="helper-status" aria-live="polite">La IA preparará 14 platos y una lista de ingredientes.</p>
         <div id="menuResults" class="menu-results hidden"></div>
       </section>
