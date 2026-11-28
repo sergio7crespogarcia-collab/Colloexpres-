@@ -1,21 +1,5 @@
 const $ = (id) => document.getElementById(id);
 let items = [];
-const demoStores = [
-  {name:"Mercadona", factor:1.00, note:"Ejemplo de cesta"},
-  {name:"Carrefour", factor:1.08, note:"Ejemplo de cesta"},
-  {name:"Alcampo", factor:.94, note:"Ejemplo de cesta"}
-];
-const basePrices = [
-  {keys:["leche"], price:1.05},{keys:["huevo"],price:2.35},{keys:["arroz"],price:1.45},
-  {keys:["aceite"],price:7.20},{keys:["pan"],price:1.30},{keys:["pollo"],price:6.50},
-  {keys:["tomate"],price:2.10},{keys:["pasta","macarron","espagueti"],price:1.15},
-  {keys:["yogur"],price:2.10},{keys:["platano","banana"],price:1.75}
-];
-function estimateItem(name){
-  const n=name.toLowerCase();
-  const match=basePrices.find(p=>p.keys.some(k=>n.includes(k)));
-  return match ? match.price : 2.00;
-}
 function addItem(value){
   const name=value.trim();
   if(!name) return;
@@ -40,22 +24,17 @@ function render(){
 }
 function compare(){
   if(!items.length){$("productInput").focus();return;}
-  const active=items.filter(x=>!x.done);
-  const base=active.reduce((sum,x)=>sum+estimateItem(x.name),0);
-  const ranked=demoStores.map(s=>({...s,total:base*s.factor})).sort((a,b)=>a.total-b.total);
+  const selected=[...document.querySelectorAll('input[name="retailer"]:checked')].map(x=>x.value);
+  const stores=selected.length?selected:["DIA","Eroski","Gadis","Familia","Mercadona","Carrefour","Alcampo","Lidl","Aldi","Continente (PT)","Auchan (PT)"];
   $("storeResults").innerHTML="";
-  ranked.forEach((store,i)=>{
-    const card=document.createElement("article");card.className="store-card"+(i===0?" best":"");
-    const top=document.createElement("div");top.className="store-top";
-    const title=document.createElement("span");title.className="store-name";title.textContent=store.name;
-    const label=document.createElement("span");label.className="store-label";label.textContent=i===0?"MENOR TOTAL":"DEMO";
-    top.append(title,label);
-    const price=document.createElement("div");price.className="store-price";price.textContent=store.total.toLocaleString("es-ES",{style:"currency",currency:"EUR"});
-    const meta=document.createElement("div");meta.className="store-meta";meta.textContent=active.length+" productos · "+store.note;
-    card.append(top,price,meta);$("storeResults").append(card);
+  stores.forEach(store=>{
+    const card=document.createElement("article");card.className="store-card";
+    const title=document.createElement("div");title.className="store-name";title.textContent=store;
+    const status=document.createElement("div");status.className="store-price pending-price";status.textContent="Pendiente";
+    const note=document.createElement("div");note.className="store-meta";note.textContent="Tienda seleccionada · falta conectar precios reales de tu zona";
+    card.append(title,status,note);$("storeResults").append(card);
   });
-  const diff=Math.max(0,ranked[ranked.length-1].total-ranked[0].total);
-  $("savingCard").innerHTML=`<div><strong>${diff.toLocaleString("es-ES",{style:"currency",currency:"EUR"})}</strong><p>Diferencia entre la cesta más cara y la más barata en esta simulación.</p></div><div aria-hidden="true" style="font-size:34px">↗</div>`;
+  $("savingCard").innerHTML="<div><strong>Comparación en preparación</strong><p>Tu lista tiene "+items.filter(x=>!x.done).length+" productos. Aún no hay precios reales conectados para calcular el ahorro.</p></div>";
   $("results").classList.remove("hidden");
   $("results").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -95,3 +74,28 @@ $("aiBtn").addEventListener("click", async () => {
 });
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 render();
+
+$("menuBtn").addEventListener("click", async () => {
+  const prompt=$("menuPrompt").value.trim(), button=$("menuBtn"), status=$("menuStatus"), output=$("menuResults");
+  if(!prompt){status.textContent="Indica cuántas personas y tus preferencias.";return;}
+  button.disabled=true;status.textContent="Preparando tu menú semanal…";output.classList.add("hidden");output.innerHTML="";
+  try{
+    const response=await fetch("/api/generate-menu",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});
+    const data=await response.json();if(!response.ok)throw new Error(data.error||"No se pudo crear el menú.");
+    const heading=document.createElement("p");heading.className="menu-summary";heading.textContent=data.summary||"Tu menú semanal";output.append(heading);
+    (data.days||[]).forEach(day=>{
+      const card=document.createElement("article");card.className="day-card";
+      const h=document.createElement("h4");h.textContent=day.day||"Día";const lunch=document.createElement("p");lunch.textContent="Comida: "+(day.lunch||"Por definir");const dinner=document.createElement("p");dinner.textContent="Cena: "+(day.dinner||"Por definir");card.append(h,lunch,dinner);output.append(card);
+    });
+    const listTitle=document.createElement("h4");listTitle.textContent="Lista de ingredientes";output.append(listTitle);
+    const ul=document.createElement("ul");
+    (data.shopping_list||[]).forEach(product=>{
+      const li=document.createElement("li");li.textContent=[product.quantity,product.name].filter(Boolean).join(" ");ul.append(li);
+    });
+    output.append(ul);
+    const add=document.createElement("button");add.className="primary-btn";add.textContent="Añadir ingredientes a mi lista";
+    add.addEventListener("click",()=>{(data.shopping_list||[]).forEach(product=>{const name=[product.quantity,product.name].filter(Boolean).join(" ");if(name)items.push({id:crypto.randomUUID?.()||String(Date.now()+Math.random()),name,done:false});});render();status.textContent="Ingredientes añadidos a Mi lista.";});
+    output.append(add);output.classList.remove("hidden");status.textContent="Menú creado. Revísalo y ajusta cantidades según tu hogar.";
+  }catch(error){status.textContent=error.message;}
+  finally{button.disabled=false;}
+});
