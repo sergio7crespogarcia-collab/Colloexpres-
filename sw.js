@@ -1,4 +1,4 @@
-const CACHE="colloexpres-v7";
+const CACHE="colloexpres-v8";
 const ASSETS=["./","./index.html","./styles.css","./app.js","./manifest.webmanifest","./logo-colloexpres.svg"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
