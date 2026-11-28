@@ -291,7 +291,30 @@ $("menuBtn").addEventListener("click", async () => {
   const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
   function chooseMode(mode){interactionMode=mode;chat.classList.toggle("pepa-voice-mode",mode==="voice");chat.classList.toggle("pepa-write-mode",mode==="write");modeChoice.classList.add("hidden");form.classList.toggle("hidden",mode!=="write");voiceControls.classList.toggle("hidden",mode!=="voice");messages.classList.toggle("hidden",mode==="voice");voiceStatus.textContent=mode==="voice"?(SpeechRecognition?"Pepa te escucha. Toca el micrófono y dile qué necesitas.":"Este navegador no permite dictado por voz. Puedes volver a Escribir."): "Escríbeme y pulsa Enviar.";if(mode==="write")input.focus();}
   function stopListening(){if(recognition){try{recognition.stop();}catch(_){}}listenBtn.disabled=false;listenBtn.textContent="🎙️ Toca para hablar";}
-  let lastPepaReply="";function speakPepa(text,manual=false){if(!("speechSynthesis" in window)||(!manual&&interactionMode!=="voice"))return;lastPepaReply=String(text||"");if(!lastPepaReply)return;speakReplyBtn.disabled=false;if(speakReplyTextBtn)speakReplyTextBtn.disabled=false;window.speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(lastPepaReply);utterance.lang="es-ES";utterance.rate=0.86;utterance.pitch=0.88;const setVoice=()=>{const voices=window.speechSynthesis.getVoices();const spanish=voices.filter(v=>/^es(-|_)/i.test(v.lang));const female=spanish.find(v=>/female|woman|monica|paulina|helena|lucia|carmen/i.test(v.name));utterance.voice=female||spanish[0]||null;};setVoice();if(!utterance.voice)window.speechSynthesis.addEventListener("voiceschanged",setVoice,{once:true});utterance.onstart=()=>{voiceStatus.textContent="Pepa te está hablando…";};utterance.onend=()=>{voiceStatus.textContent="¿Quieres volver a escucharme?";};utterance.onerror=()=>{voiceStatus.textContent="No pude reproducir la voz. Pulsa «Escuchar a Pepa» para intentarlo otra vez.";};window.speechSynthesis.speak(utterance);}speakReplyBtn.addEventListener("click",()=>speakPepa(lastPepaReply,true));if(speakReplyTextBtn)speakReplyTextBtn.addEventListener("click",()=>speakPepa(lastPepaReply,true));
+  let lastPepaReply="";
+  function speakPepa(text,manual=false){
+    lastPepaReply=String(text||"");
+    if(!lastPepaReply){voiceStatus.textContent="Todavía no tengo una respuesta para leer.";return;}
+    if(!("speechSynthesis" in window)||!("SpeechSynthesisUtterance" in window)){
+      voiceStatus.textContent="Este navegador no ofrece lectura de voz. Prueba a abrir COLLOEXPRES en Safari.";
+      return;
+    }
+    speakReplyBtn.disabled=false;if(speakReplyTextBtn)speakReplyTextBtn.disabled=false;
+    const synth=window.speechSynthesis;
+    try{synth.cancel();synth.resume();}catch(_){}
+    const utterance=new SpeechSynthesisUtterance(lastPepaReply);
+    utterance.lang="es-ES";utterance.rate=0.9;utterance.pitch=1;
+    const voices=synth.getVoices();
+    const spanish=voices.filter(v=>/^es([_-]|$)/i.test(v.lang));
+    utterance.voice=spanish.find(v=>/españa|spain|peninsular/i.test(v.name+" "+v.lang))||spanish[0]||null;
+    utterance.onstart=()=>{voiceStatus.textContent="Pepa te está hablando…";};
+    utterance.onend=()=>{voiceStatus.textContent="Pepa terminó de hablar. Puedes volver a escucharla.";};
+    utterance.onerror=(event)=>{voiceStatus.textContent="El iPhone no pudo reproducir la voz ("+(event.error||"error de audio")+"). Comprueba el volumen y vuelve a tocar Escuchar a Pepa.";};
+    voiceStatus.textContent="Preparando la voz de Pepa…";
+    try{synth.speak(utterance);synth.resume();}catch(error){voiceStatus.textContent="No se pudo iniciar el audio: "+error.message;}
+  }
+  speakReplyBtn.addEventListener("click",()=>speakPepa(lastPepaReply,true));
+  if(speakReplyTextBtn)speakReplyTextBtn.addEventListener("click",()=>speakPepa(lastPepaReply,true));
   writeMode.addEventListener("click",()=>chooseMode("write"));voiceMode.addEventListener("click",()=>chooseMode("voice"));switchVoice.addEventListener("click",()=>chooseMode("voice"));switchWrite.addEventListener("click",()=>{stopListening();window.speechSynthesis?.cancel();chooseMode("write");});
   listenBtn.addEventListener("click",()=>{if(!SpeechRecognition){voiceStatus.textContent="Tu navegador no admite dictado por voz. Elige Escribir.";return;}stopListening();recognition=new SpeechRecognition();recognition.lang="es-ES";recognition.interimResults=false;recognition.maxAlternatives=1;recognition.onstart=()=>{listenBtn.disabled=true;listenBtn.textContent="👂 Te escucho…";voiceStatus.textContent="Te escucho, cariño. Habla ahora.";};recognition.onresult=e=>{const heard=e.results[0][0].transcript;voiceStatus.textContent="He entendido: "+heard;sendMessage(heard);};recognition.onerror=e=>{voiceStatus.textContent=e.error==="not-allowed"?"Necesitas permitir el micrófono en tu navegador.":"No he podido escucharte. Inténtalo otra vez.";stopListening();};recognition.onend=()=>{listenBtn.disabled=false;listenBtn.textContent="🎙️ Toca para hablar";};try{recognition.start();}catch(_){voiceStatus.textContent="No se pudo iniciar el micrófono. Vuelve a intentarlo.";}}); 
   stopVoiceBtn.addEventListener("click",()=>{window.speechSynthesis?.cancel();stopListening();voiceStatus.textContent="He detenido la voz.";});
