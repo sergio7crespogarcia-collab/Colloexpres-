@@ -321,7 +321,7 @@ $("menuBtn").addEventListener("click", async () => {
   function sendMessage(prompt){if(!prompt.trim())return;send.disabled=true;send.textContent="…";say(prompt,"user");say("Déjame ayudarte, cariño…");const pending=messages.lastElementChild;
     fetch("/api/pepa",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:prompt,items:items.map(x=>({name:x.name,done:x.done})),page:document.querySelector(".book-page.active-page")?.dataset.page||"0",last_recipe:window.colloexpresLastRecipe||"",weekly_menu:[...document.querySelectorAll("#menuResults .day-card")].map(card=>({day:card.querySelector("h4")?.textContent||"",meals:[...card.querySelectorAll("p")].map(p=>p.textContent)}))})})
       .then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error||"No pude responder ahora.");const actionText=await handleAction(data);const answer=[data.reply,actionText].filter(Boolean).join(" ");pending.remove();say(answer);speakPepa(answer);})
-      .catch(error=>{pending.remove();say(error.message+" Comprueba que la IA esté activada en el servidor.");})
+      .catch(error=>{pending.remove();say(error.message);})
       .finally(()=>{send.disabled=false;send.textContent="Enviar";input.focus();});
   }
   const pages={"inicio":"inicio","portada":"inicio","hacer menú":"hacer-menu","menú":"hacer-menu","menú semanal":"hacer-menu","planificador":"hacer-menu","comparación":"supermercados","supermercados":"supermercados","cesta":"lista","lista":"lista","compra":"lista","cámara":"camera"};
