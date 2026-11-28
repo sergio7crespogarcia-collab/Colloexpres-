@@ -193,3 +193,86 @@ $("menuBtn").addEventListener("click", async () => {
     }catch(error){brandResult.textContent=error.message;}
   });
 })();
+
+/* Planificador: calendario del móvil, recordatorio de compra y recetas en YouTube */
+(function setupMenuPlanner(){
+  const panel=document.querySelector(".menu-panel");
+  const results=document.getElementById("menuResults");
+  if(!panel||!results)return;
+  const planner=document.createElement("section");
+  planner.className="menu-planner";
+  planner.innerHTML='<h3>🗓️ Organiza tu semana</h3><p>Elige cuándo empieza tu menú y cuándo quieres que el móvil te recuerde hacer la compra.</p><div class="planner-fields"><label>Primer día del menú<input id="menuStartDate" type="date"></label><label>Día para hacer la compra<input id="shoppingReminderDate" type="date"></label><label>Hora del aviso<input id="shoppingReminderTime" type="time" value="10:00"></label></div><div class="planner-actions"><button type="button" class="primary-btn" id="calendarMenuBtn">Añadir menú al calendario</button><button type="button" class="secondary-btn" id="calendarShoppingBtn">Avisarme para hacer la compra</button></div><p class="helper-status" id="calendarStatus" aria-live="polite">Se abrirá un archivo de calendario para añadir los eventos al calendario del móvil.</p>';
+  const menuButton=document.getElementById("menuBtn");
+  menuButton.insertAdjacentElement("afterend",planner);
+  const today=new Date();
+  const dateValue=d=>{const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);return local.toISOString().slice(0,10);};
+  const start=new Date(today);start.setDate(start.getDate()+((1-start.getDay()+7)%7));
+  document.getElementById("menuStartDate").value=dateValue(start);
+  document.getElementById("shoppingReminderDate").value=dateValue(start);
+  let currentMenu=null;
+  const pad=n=>String(n).padStart(2,"0");
+  const toICSDate=d=>d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(d.getHours())+pad(d.getMinutes())+"00";
+  const escapeICS=s=>String(s||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
+  function downloadCalendar(events,name){
+    const stamp=toICSDate(new Date());
+    const body=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//COLLOEXPRES//Planificador//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH",...events.flatMap(e=>["BEGIN:VEVENT","UID:"+Date.now()+"-"+Math.random().toString(36).slice(2)+"@colloexpres","DTSTAMP:"+stamp,"DTSTART:"+toICSDate(e.start),"DTEND:"+toICSDate(e.end),"SUMMARY:"+escapeICS(e.title),"DESCRIPTION:"+escapeICS(e.description),"BEGIN:VALARM","TRIGGER:-PT30M","ACTION:DISPLAY","DESCRIPTION:"+escapeICS(e.title),"END:VALARM","END:VEVENT"]),"END:VCALENDAR"].join("\r\n");
+    const blob=new Blob([body],{type:"text/calendar;charset=utf-8"});
+    const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name+".ics";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }
+  function dayDate(index){const d=new Date(document.getElementById("menuStartDate").value+"T00:00:00");d.setDate(d.getDate()+index);return d;}
+  function eventAt(date,hour,minute,title,description){const start=new Date(date);start.setHours(hour,minute,0,0);const end=new Date(start);end.setMinutes(end.getMinutes()+45);return {start,end,title,description};}
+  document.getElementById("calendarMenuBtn").addEventListener("click",()=>{
+    if(!currentMenu||!Array.isArray(currentMenu.days)||!currentMenu.days.length){document.getElementById("calendarStatus").textContent="Primero crea tu menú semanal con el botón de arriba.";return;}
+    if(!document.getElementById("menuStartDate").value){document.getElementById("calendarStatus").textContent="Elige el primer día del menú.";return;}
+    const events=[];
+    currentMenu.days.forEach((day,index)=>{
+      const date=dayDate(index);
+      if(day.lunch)events.push(eventAt(date,13,30,"Comida: "+day.lunch,"Menú de COLLOEXPRES"));
+      if(day.dinner)events.push(eventAt(date,20,30,"Cena: "+day.dinner,"Menú de COLLOEXPRES"));
+    });
+    if(!events.length){document.getElementById("calendarStatus").textContent="Este menú no contiene platos para añadir.";return;}
+    downloadCalendar(events,"colloexpres-menu-semanal");
+    document.getElementById("calendarStatus").textContent="Archivo creado. Ábrelo en tu iPhone y elige añadir los eventos al calendario. Cada comida tendrá un aviso 30 minutos antes.";
+  });
+  document.getElementById("calendarShoppingBtn").addEventListener("click",()=>{
+    const date=document.getElementById("shoppingReminderDate").value,time=document.getElementById("shoppingReminderTime").value;
+    if(!date||!time){document.getElementById("calendarStatus").textContent="Elige el día y la hora del recordatorio.";return;}
+    const startAt=new Date(date+"T"+time+":00");
+    if(Number.isNaN(startAt.getTime()))return;
+    const end=new Date(startAt);end.setMinutes(end.getMinutes()+30);
+    downloadCalendar([{start:startAt,end,title:"Hacer la compra · COLLOEXPRES",description:"Revisa tu lista de la compra en COLLOEXPRES."}],"colloexpres-recordatorio-compra");
+    document.getElementById("calendarStatus").textContent="Recordatorio preparado. Abre el archivo y añádelo al calendario del móvil para recibir el aviso.";
+  });
+  window.addEventListener("colloexpres:menu-created",event=>{
+    currentMenu=event.detail;
+  });
+  const originalMenuBtn=document.getElementById("menuBtn");
+  originalMenuBtn.addEventListener("click",()=>{currentMenu=null;});
+  const observer=new MutationObserver(()=>{
+    if(results.classList.contains("hidden"))return;
+    const days=results.querySelectorAll(".day-card");
+    days.forEach(card=>{
+      if(card.querySelector(".youtube-recipe-link"))return;
+      const title=card.querySelector("h4")?.textContent||"";
+      const mealTexts=[...card.querySelectorAll("p")].map(p=>p.textContent.replace(/^(Comida|Cena):\\s*/,""));
+      mealTexts.forEach(meal=>{
+        if(!meal||meal==="Por definir")return;
+        const link=document.createElement("a");link.className="youtube-recipe-link";link.target="_blank";link.rel="noopener noreferrer";
+        link.href="https://www.youtube.com/results?search_query="+encodeURIComponent(meal+" receta paso a paso");
+        link.textContent="▶ Ver recetas en YouTube: "+meal;
+        card.append(link);
+      });
+    });
+  });
+  observer.observe(results,{childList:true,subtree:true});
+  const generate=document.getElementById("menuBtn");
+  generate.addEventListener("click",()=>{
+    const check=setInterval(()=>{
+      if(!results.classList.contains("hidden")&&results.querySelector(".day-card")){
+        currentMenu={days:[...results.querySelectorAll(".day-card")].map(card=>({day:card.querySelector("h4")?.textContent||"",lunch:card.querySelectorAll("p")[0]?.textContent.replace(/^Comida:\\s*/,"")||"",dinner:card.querySelectorAll("p")[1]?.textContent.replace(/^Cena:\\s*/,"")||""}))};
+        clearInterval(check);
+      }
+    },250);
+    setTimeout(()=>clearInterval(check),15000);
+  });
+})();
