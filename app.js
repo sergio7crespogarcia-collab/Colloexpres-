@@ -101,62 +101,46 @@ $("menuBtn").addEventListener("click", async () => {
 });
 
 
-/* Book-style navigation: one screen per section, with page controls and swipe */
+/* Book-style navigation: each section is a separate page */
 (function setupBookNavigation(){
+  const main=document.querySelector("main");
   const home=document.getElementById("inicio");
-  const workspace=document.querySelector(".workspace");
   const hero=document.querySelector(".hero");
-  const how=document.querySelector(".how");
-  if(!home||!workspace)return;
-  const pages=[];
-  function makePage(title,subtitle){
-    const page=document.createElement("section");
-    page.className="book-page";
-    page.innerHTML='<div class="book-page-heading"><span class="book-kicker">COLLOEXPRES</span><h2>'+title+'</h2><p>'+subtitle+'</p></div>';
-    return page;
-  }
-  const menuPage=makePage("Hacer menú","Prepara ideas de comidas y cenas con ayuda de la IA.");
-  const weeklyPage=makePage("Menú semanal","Aquí aparecerá tu planificación semanal generada.");
-  const comparePage=makePage("Comparación de supermercados","DIA · Eroski · Gadis · Familia y más.");
-  const basketPage=makePage("Cesta de la compra","Añade productos y organiza tu lista.");
-  menuPage.append(document.getElementById("hacer-menu"));
-  weeklyPage.append(document.getElementById("menuResults"));
-  comparePage.append(document.getElementById("supermercados"),document.getElementById("results"));
-  basketPage.append(document.querySelector(".add-panel"),document.querySelector(".ai-panel"),document.querySelector(".list-area"),document.querySelector(".compare-row"));
-  pages.push(home,menuPage,weeklyPage,comparePage,basketPage);
+  const workspace=document.querySelector(".workspace");
+  if(!main||!home||!workspace)return;
+  const add=workspace.querySelector(".add-panel");
+  const ai=workspace.querySelector(".ai-panel");
+  const menu=workspace.querySelector(".menu-panel");
+  const retailers=workspace.querySelector(".retailers-panel");
+  const list=workspace.querySelector(".list-area");
+  const compare=workspace.querySelector(".compare-row");
+  const results=document.getElementById("results");
+  const page=(title,subtitle)=>{const el=document.createElement("section");el.className="book-page";el.innerHTML='<header class="book-page-heading"><span class="book-kicker">COLLOEXPRES</span><h2>'+title+'</h2><p>'+subtitle+'</p></header>';return el;};
+  const weekly=page("Menú semanal","Planifica comidas y cenas para toda la semana.");
+  const basket=page("Cesta de la compra","Añade productos y organiza tu lista.");
+  const menuPage=page("Hacer menú","Crea ideas de comidas con ayuda de la IA.");
+  const comparePage=page("Comparación de supermercados","DIA · Eroski · Gadis · Familia y más.");
+  menuPage.append(menu);
+  weekly.append(ai);
+  basket.append(add,list,compare);
+  comparePage.append(retailers,results);
+  if(hero)hero.remove();
+  workspace.remove();
+  const pages=[home,menuPage,weekly,comparePage,basket];
   const book=document.createElement("div");book.className="book-view";
   const frame=document.createElement("div");frame.className="book-frame";
-  pages.forEach((page,i)=>{page.classList.add("book-page");page.dataset.page=String(i);frame.append(page);});
+  pages.forEach((p,i)=>{p.classList.add("book-page");p.dataset.page=i;frame.append(p);});
   book.append(frame);
-  const controls=document.createElement("div");controls.className="book-controls";
-  controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><span class="book-page-count" aria-live="polite">1 / 5</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
-  book.append(controls);
-  document.querySelector("main").replaceChildren(book);
+  const controls=document.createElement("nav");controls.className="book-controls";controls.setAttribute("aria-label","Navegación de páginas");
+  controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><span class="book-page-count">1 / 5</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
+  book.append(controls);main.replaceChildren(book);
   let current=0;
-  function show(index){
-    current=Math.max(0,Math.min(pages.length-1,index));
-    pages.forEach((page,i)=>{page.classList.toggle("active-page",i===current);page.setAttribute("aria-hidden",i===current?"false":"true");});
-    controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;
-    controls.querySelector(".book-prev").disabled=current===0;
-    controls.querySelector(".book-next").disabled=current===pages.length-1;
-    frame.style.setProperty("--page-index",current);
-    history.replaceState(null,"",current===0?"#inicio":"#pagina-"+(current+1));
-  }
-  const destinations={"#hacer-menu":1,"#menuResults":2,"#supermercados":3,"#lista":4,"#comparar":4,"#results":3};
-  document.addEventListener("click",e=>{
-    const link=e.target.closest('a[href^="#"]');
-    if(!link)return;
-    const target=link.getAttribute("href");
-    if(destinations[target]!==undefined){e.preventDefault();show(destinations[target]);}
-  });
+  function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;}
+  const targets={"#hacer-menu":1,"#menuResults":1,"#supermercados":3,"#lista":4,"#comparar":4,"#results":3};
+  main.addEventListener("click",e=>{const link=e.target.closest('a[href^="#"]');if(link&&targets[link.getAttribute("href")]!==undefined){e.preventDefault();show(targets[link.getAttribute("href")]);}});
   controls.querySelector(".book-prev").addEventListener("click",()=>show(current-1));
   controls.querySelector(".book-next").addEventListener("click",()=>show(current+1));
-  let startX=0,startY=0;
-  frame.addEventListener("touchstart",e=>{startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY;},{passive:true});
-  frame.addEventListener("touchend",e=>{
-    const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;
-    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25)show(current+(dx<0?1:-1));
-  },{passive:true});
-  document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(current+1);if(e.key==="ArrowLeft")show(current-1);});
+  let x=0,y=0;frame.addEventListener("touchstart",e=>{x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;},{passive:true});
+  frame.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-x,dy=e.changedTouches[0].clientY-y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.3)show(current+(dx<0?1:-1));},{passive:true});
   show(0);
 })();
