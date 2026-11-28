@@ -121,7 +121,7 @@ $("menuBtn").addEventListener("click", async () => {
   const menuPage=page("Hacer menú","Crea ideas de comidas con ayuda de la IA.");
   const comparePage=page("Comparación de supermercados","DIA · Eroski · Gadis · Familia y más.");
   const cameraPage=page("Cámara y marcas","Fotografía productos y compara sus formatos y precios.");
-  cameraPage.insertAdjacentHTML("beforeend","<section class=\"camera-panel\" id=\"cameraPanel\"><div class=\"camera-intro\"><span class=\"camera-emoji\">📸🍎</span><div><h3>Escáner de compra</h3><p>Fotografía productos y compara marca, tamaño y precio.</p></div></div><label class=\"camera-pick\" for=\"productPhoto\">📷 Abrir cámara o elegir foto</label><input id=\"productPhoto\" type=\"file\" accept=\"image/*\" capture=\"environment\" class=\"camera-input\"><img id=\"photoPreview\" class=\"photo-preview hidden\" alt=\"Foto del producto\"><div class=\"camera-fields\"><label>Producto A — marca y formato<input id=\"brandA\" placeholder=\"Ej. Marca A, 500 g\"></label><label>Precio A (€)<input id=\"priceA\" type=\"number\" min=\"0\" step=\"0.01\" placeholder=\"2,50\"></label><label>Producto B — marca y formato<input id=\"brandB\" placeholder=\"Ej. Marca B, 750 g\"></label><label>Precio B (€)<input id=\"priceB\" type=\"number\" min=\"0\" step=\"0.01\" placeholder=\"3,20\"></label></div><button id=\"compareBrandsBtn\" class=\"primary-btn\" type=\"button\">Comparar productos</button><div id=\"brandResult\" class=\"camera-result\" aria-live=\"polite\">Introduce los precios y formatos de las etiquetas para compararlos.</div><div class=\"condition-check\"><h4>🧐 Revisa el estado del envase</h4><ul><li>Sin golpes, fugas ni hinchazón.</li><li>Precinto intacto.</li><li>Fecha legible y adecuada.</li><li>Refrigeración correcta.</li></ul><p class=\"safety-note\">Una foto no puede confirmar que el alimento sea seguro ni detectar bacterias. Si tienes dudas, no lo compres ni lo consumas.</p></div></section>");
+  cameraPage.insertAdjacentHTML("beforeend",'<section class="camera-panel" id="cameraPanel"><div class="camera-intro"><span class="camera-emoji">📸🍎</span><div><h3>Foto del producto</h3><p>Saca una foto y COLLOEXPRES lo analizará automáticamente.</p></div></div><label class="camera-pick" for="productPhoto">📷 HACER FOTO DEL PRODUCTO</label><input id="productPhoto" type="file" accept="image/*" capture="environment" class="camera-input"><img id="photoPreview" class="photo-preview hidden" alt="Foto del producto"><div id="brandResult" class="camera-result" aria-live="polite">Haz una foto para empezar. No necesitas escribir nada.</div><p class="safety-note">La foto solo permite revisar señales visibles. No detecta bacterias ni puede garantizar que un alimento sea seguro. Si hay dudas, no lo consumas.</p></section>');
   menuPage.append(menu);
   weekly.append(ai);
   basket.append(add,list,compare);
@@ -162,7 +162,29 @@ $("menuBtn").addEventListener("click", async () => {
   frame.addEventListener("touchstart",event=>{x=event.changedTouches[0].clientX;y=event.changedTouches[0].clientY;},{passive:true});
   frame.addEventListener("touchend",event=>{const dx=event.changedTouches[0].clientX-x,dy=event.changedTouches[0].clientY-y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)show(current+(dx<0?1:-1));},{passive:true});
   show(0);
-  const photo=document.getElementById("productPhoto"),preview=document.getElementById("photoPreview");
-  photo.addEventListener("change",()=>{const file=photo.files&&photo.files[0];if(!file)return;if(preview.dataset.url)URL.revokeObjectURL(preview.dataset.url);const url=URL.createObjectURL(file);preview.src=url;preview.dataset.url=url;preview.classList.remove("hidden");});
-  document.getElementById("compareBrandsBtn").addEventListener("click",()=>{const pa=Number(document.getElementById("priceA").value),pb=Number(document.getElementById("priceB").value),out=document.getElementById("brandResult");if(!(pa>0&&pb>0)){out.textContent="Introduce los dos precios para compararlos.";return;}const aName=document.getElementById("brandA").value||"Producto A",bName=document.getElementById("brandB").value||"Producto B";out.textContent=aName+": "+pa.toFixed(2)+" €. "+bName+": "+pb.toFixed(2)+" €. Para comparar el coste real por kilo o litro, comprueba el peso o volumen de ambos envases. Esta versión no lee automáticamente las etiquetas de la foto.";});
+  const photo=document.getElementById("productPhoto"),preview=document.getElementById("photoPreview"),brandResult=document.getElementById("brandResult");
+  photo.addEventListener("change",async()=>{
+    const file=photo.files&&photo.files[0];if(!file)return;
+    brandResult.textContent="Preparando la foto…";
+    try{
+      const image=await createImageBitmap(file);
+      const scale=Math.min(1,1600/Math.max(image.width,image.height));
+      const canvas=document.createElement("canvas");canvas.width=Math.round(image.width*scale);canvas.height=Math.round(image.height*scale);
+      canvas.getContext("2d").drawImage(image,0,0,canvas.width,canvas.height);
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",0.82));
+      if(!blob)throw new Error("No se pudo preparar la foto.");
+      const url=URL.createObjectURL(blob);if(preview.dataset.url)URL.revokeObjectURL(preview.dataset.url);preview.src=url;preview.dataset.url=url;preview.classList.remove("hidden");
+      brandResult.textContent="Analizando el producto…";
+      const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(",")[1]);reader.onerror=()=>reject(new Error("No se pudo leer la foto."));reader.readAsDataURL(blob);});
+      const response=await fetch("/api/analyze-product",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({image:base64,mimeType:"image/jpeg"})});
+      const data=await response.json();if(!response.ok)throw new Error(data.error||"No se pudo analizar la foto.");
+      const status=data.condition==="aparentemente_bien"?"Aparentemente bien (solo por fuera)":data.condition==="señales_de_alerta"?"Señales de alerta visibles":"No se puede determinar";
+      brandResult.replaceChildren();
+      const heading=document.createElement("h3");heading.textContent=status;brandResult.append(heading);
+      const product=document.createElement("p");product.textContent="Producto: "+data.product+" · Marca: "+data.brand;brandResult.append(product);
+      if(data.visible_signs&&data.visible_signs.length){const ul=document.createElement("ul");data.visible_signs.forEach(sign=>{const li=document.createElement("li");li.textContent=sign;ul.append(li);});brandResult.append(ul);}
+      const advice=document.createElement("p");advice.textContent=data.advice;brandResult.append(advice);
+      const price=document.createElement("p");price.className="price-unavailable";price.textContent=data.price_message||"Precio no disponible";brandResult.append(price);
+    }catch(error){brandResult.textContent=error.message;}
+  });
 })();
