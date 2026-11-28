@@ -253,3 +253,27 @@ button,a,input[type="checkbox"]{touch-action:manipulation}
 .book-page-count{background:#fff8d9;border:2px solid #d9e9b9;border-radius:30px;padding:9px 16px}
 .book-controls button:disabled{opacity:.35;box-shadow:none}
 @media(max-width:600px){.book-view{background:#eaf5d9}.book-frame{border-radius:22px}.book-page{border-radius:18px}.home-menu .main-menu-card{border-radius:23px}.book-page-heading{padding-top:8px}}
+
+/* Integración visual más profunda: una sola superficie ilustrada */
+.book-view{background:linear-gradient(135deg,#dff1c9 0%,#fff3c9 48%,#d9f0d8 100%)}
+.book-frame{background:linear-gradient(145deg,#fff9e8 0%,#f4f8dc 48%,#fff0d9 100%);border:0;box-shadow:0 12px 34px #31552a18}
+.book-page{background:linear-gradient(150deg,#fff9e8 0%,#f7f8df 46%,#eaf5d9 100%)}
+.book-page:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;background:radial-gradient(ellipse at 8% 12%,#f7d96b 0 10%,transparent 32%),radial-gradient(ellipse at 94% 90%,#8fce75 0 12%,transparent 34%)}
+.book-page>*{position:relative}
+.book-page .home-menu{background:transparent}
+.home-menu{background:transparent!important}
+.home-menu .main-menu-grid{gap:12px}
+.home-menu .main-menu-card{border:1px solid #ffffff99!important;box-shadow:0 7px 20px #426b3212!important;backdrop-filter:blur(8px);background-color:#ffffff55}
+.home-menu .menu-green{background:linear-gradient(135deg,#dff3b9dd,#c7e9a8dd)!important}
+.home-menu .menu-yellow{background:linear-gradient(135deg,#fff0b8dd,#f9df88dd)!important}
+.home-menu .menu-blue{background:linear-gradient(135deg,#d8f0f5dd,#b9e3eddd)!important}
+.home-menu .menu-peach{background:linear-gradient(135deg,#ffe4cfdd,#ffd0b0dd)!important}
+.book-panel,.add-panel,.ai-panel,.menu-panel,.retailers-panel,.store-card,.day-card{background:#ffffff70!important;border:1px solid #ffffffa8!important;box-shadow:0 5px 18px #426b3210!important;backdrop-filter:blur(7px)}
+.input-row input,.ai-panel textarea,.menu-panel textarea{background:#fffdf2cc!important;border:1px solid #c9dfb988!important}
+.primary-btn,.book-controls button{background:linear-gradient(135deg,#168451,#087044)!important;border:1px solid #b8e18d!important;box-shadow:0 4px 0 #075b39!important}
+.add-btn{background:linear-gradient(135deg,#e9f77e,#d3ed67)!important;border:1px solid #fff!important}
+.quick-add button,.retailer-grid label{background:#ffffff70!important;border:1px solid #ffffffb8!important}
+.notice{background:#fff1c980!important;border:1px solid #f1d98e99!important}
+.book-page-heading{border-bottom:1px solid #c6dcb477!important}
+.book-page-count{background:#ffffff77!important;border:1px solid #ffffffbb!important}
+@media(max-width:600px){.book-frame{border-radius:24px}.book-page{background:linear-gradient(150deg,#fff9e8,#f5f7df 55%,#eaf5d9)}}
