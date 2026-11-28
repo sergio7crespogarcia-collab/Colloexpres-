@@ -885,3 +885,55 @@ body > #pepaChat.pepa-write-mode .pepa-hint{padding-bottom:8px!important}
  body > #pepaChat.pepa-write-mode .pepa-form textarea{min-height:88px!important;font-size:17px!important;padding:15px!important}
  body > #pepaChat.pepa-write-mode .pepa-form button{min-height:44px!important;font-size:14px!important;padding:9px 12px!important}
 }
+
+
+/* Corrección de visibilidad y distribución del chat de Pepa en iPhone */
+body > #pepaChat .hidden,
+body > #pepaChat .pepa-mode-choice.hidden,
+body > #pepaChat .pepa-messages.hidden,
+body > #pepaChat .pepa-form.hidden,
+body > #pepaChat .pepa-voice-controls.hidden,
+body > #pepaChat .pepa-voice-face.hidden{
+  display:none!important;
+}
+body > #pepaChat.pepa-write-mode .pepa-mode-choice,
+body > #pepaChat.pepa-write-mode .pepa-voice-controls{
+  display:none!important;
+}
+body > #pepaChat.pepa-write-mode .pepa-form{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:8px!important;
+  width:100%!important;
+  max-width:820px!important;
+  box-sizing:border-box!important;
+}
+body > #pepaChat.pepa-write-mode .pepa-form textarea{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  width:100%!important;
+  min-width:0!important;
+}
+body > #pepaChat.pepa-write-mode .pepa-form button{
+  grid-row:2!important;
+  grid-column:auto!important;
+  width:100%!important;
+  min-width:0!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+body > #pepaChat.pepa-write-mode .pepa-form #pepaSend{grid-column:1!important}
+body > #pepaChat.pepa-write-mode .pepa-form #pepaSpeakReplyText{grid-column:2!important}
+body > #pepaChat.pepa-write-mode .pepa-form #pepaSwitchVoice{grid-column:3!important}
+@media(max-width:600px){
+  body > #pepaChat.pepa-write-mode .pepa-form{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;
+  }
+  body > #pepaChat.pepa-write-mode .pepa-form button{
+    min-height:48px!important;
+    padding:8px 5px!important;
+    font-size:13px!important;
+  }
+}
