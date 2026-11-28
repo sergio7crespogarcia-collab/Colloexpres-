@@ -513,3 +513,16 @@ main,.book-view,.book-frame,.book-page{width:100%!important;max-width:100%!impor
 .pepa-voice-status{font-size:11px;color:#53635a;padding:0 12px 7px;margin:0;flex-shrink:0}
 .pepa-chat{height:min(460px,58dvh);min-height:300px}
 @media(max-width:480px){.pepa-chat{height:min(440px,58dvh);min-height:290px}}
+
+
+/* Portada con Pepa protagonista y lanzador discreto que no tapa contenido */
+.home-pepa{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:min(270px,65vw);margin:5px auto 12px;text-align:center;color:#14543f}
+.home-pepa svg{display:block;width:100%;height:auto;max-height:230px;filter:drop-shadow(0 8px 7px #123b3218)}
+.home-pepa strong{font:900 clamp(23px,5vw,32px) Manrope,sans-serif}
+.home-pepa span{font-size:13px;color:#536b5b}
+.pepa-panel{right:10px!important;bottom:10px!important;z-index:1000}
+.pepa-launcher{width:58px!important;height:58px!important;padding:2px!important;justify-content:center!important;border:2px solid white!important;background:#14543f!important}
+.pepa-grandma{width:52px!important;height:52px!important;flex:0 0 52px!important}
+.pepa-name{display:none!important}
+.pepa-chat{width:min(340px,calc(100vw - 24px))!important;max-height:66dvh!important;height:min(420px,66dvh)!important;min-height:260px!important}
+@media(max-width:600px){.home-pepa{width:min(220px,58vw);margin:2px auto 7px}.home-pepa svg{max-height:175px}.home-pepa span{font-size:12px}.pepa-chat{height:min(390px,62dvh)!important;min-height:250px!important}}
