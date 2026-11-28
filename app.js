@@ -131,13 +131,22 @@ $("menuBtn").addEventListener("click", async () => {
   const pages=[home,menuPage,weekly,comparePage,basket,cameraPage];
   const book=document.createElement("div");book.className="book-view";
   const frame=document.createElement("div");frame.className="book-frame";
-  pages.forEach((p,i)=>{p.classList.add("book-page");p.dataset.page=i;frame.append(p);});
+  pages.forEach((p,i)=>{
+    p.classList.add("book-page");p.dataset.page=i;
+    if(i>0){
+      const back=document.createElement("button");
+      back.type="button";back.className="page-home-button";back.textContent="⌂ Volver al menú principal";
+      back.addEventListener("click",()=>show(0));
+      p.insertBefore(back,p.firstChild);
+    }
+    frame.append(p);
+  });
   book.append(frame);
   const controls=document.createElement("nav");controls.className="book-controls";controls.setAttribute("aria-label","Navegación de páginas");
   controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><button type="button" class="book-home" aria-label="Volver al menú principal">⌂ Inicio</button><span class="book-page-count">1 / 6</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
   book.append(controls);main.replaceChildren(book);
   let current=0;
-  function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;}
+  function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;window.scrollTo({top:0,behavior:"smooth"});}
   // Enlaces directos para que cada tarjeta abra su página, también en Safari iPhone.
   const homeCards=home.querySelectorAll(".main-menu-card");
   const destinations=[1,2,3,4,5];
