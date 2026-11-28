@@ -115,17 +115,12 @@ $("menuBtn").addEventListener("click", async () => {
     page.innerHTML='<div class="book-page-heading"><span class="book-kicker">COLLOEXPRES</span><h2>'+title+'</h2><p>'+subtitle+'</p></div>';
     return page;
   }
-  const menuPage=makePage("Hacer menú","Ideas para organizar tus comidas y cenas.");
-  const weeklyPage=makePage("Menú semanal","Planifica los siete días de la semana.");
+  const menuPage=makePage("Hacer menú","Prepara ideas de comidas y cenas con ayuda de la IA.");
+  const weeklyPage=makePage("Menú semanal","Aquí aparecerá tu planificación semanal generada.");
   const comparePage=makePage("Comparación de supermercados","DIA · Eroski · Gadis · Familia y más.");
   const basketPage=makePage("Cesta de la compra","Añade productos y organiza tu lista.");
   menuPage.append(document.getElementById("hacer-menu"));
   weeklyPage.append(document.getElementById("menuResults"));
-  // Keep the weekly menu generator together on its own page.
-  const weeklyPanel=document.createElement("div");
-  weeklyPanel.className="book-panel";
-  weeklyPanel.append(document.querySelector(".menu-panel .ai-heading"),document.querySelector(".menu-panel label"),document.getElementById("menuPrompt"),document.getElementById("menuBtn"),document.getElementById("menuStatus"),document.getElementById("menuResults"));
-  weeklyPage.append(weeklyPanel);
   comparePage.append(document.getElementById("supermercados"),document.getElementById("results"));
   basketPage.append(document.querySelector(".add-panel"),document.querySelector(".ai-panel"),document.querySelector(".list-area"),document.querySelector(".compare-row"));
   pages.push(home,menuPage,weeklyPage,comparePage,basketPage);
