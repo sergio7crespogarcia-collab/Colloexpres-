@@ -676,3 +676,13 @@ footer{background:#073e78}
   .pepa-panel{top:68px!important;right:10px!important}
   .pepa-launcher{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important}
 }
+
+
+/* Acceso al menú principal visible dentro de cada apartado */
+.page-home-button{
+ display:block;width:100%;margin:0 0 16px;padding:13px 16px;
+ border:0;border-radius:14px;background:#0756a5;color:#fff;
+ font-size:16px;font-weight:800;text-align:left;cursor:pointer;
+ box-shadow:0 3px 10px #0756a522;
+}
+.page-home-button:active{background:#064887}
