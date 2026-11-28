@@ -661,7 +661,7 @@ footer{background:#073e78}
 
 /* Pepa compacta y fuera de las casillas: queda debajo de la cabecera */
 .pepa-panel{
-  top:76px!important;
+  top:64px!important;
   right:12px!important;
   bottom:auto!important;
 }
@@ -673,7 +673,7 @@ footer{background:#073e78}
   box-shadow:0 2px 8px #123b3220!important;
 }
 @media(max-width:600px){
-  .pepa-panel{top:68px!important;right:10px!important}
+  .pepa-panel{top:56px!important;right:10px!important}
   .pepa-launcher{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important}
 }
 
