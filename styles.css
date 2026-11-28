@@ -65,3 +65,36 @@ html{scroll-behavior:smooth}
 .menu-green{background:#e8f7d8}.menu-yellow{background:#fff1c9}.menu-blue{background:#dff3fb}.menu-peach{background:#ffeadb}
 .menu-green .menu-card-icon{background:#d5edbd}.menu-yellow .menu-card-icon{background:#ffe4a0}.menu-blue .menu-card-icon{background:#c7eaf6}.menu-peach .menu-card-icon{background:#ffd8c1}
 @media(max-width:480px){.home-menu{padding:26px 12px 18px}.cb-logo{width:155px;height:140px}.cb-letters{font-size:105px}.cb-cart{font-size:35px}.main-menu-grid{grid-template-columns:1fr 1fr;gap:9px}.main-menu-card{min-height:154px;padding:13px}.main-menu-card strong{font-size:14px}.main-menu-card small{font-size:10px}}
+
+/* Landing page matched to the user's reference */
+.topbar{display:none}
+.home-menu{position:relative;max-width:none;margin:0 -24px;padding:24px 12px 28px;border:0;border-radius:0;box-shadow:none;background:#fff;min-height:100vh;text-align:center;overflow:hidden}
+.home-actions{position:absolute;right:28px;top:20px;display:flex;gap:26px;z-index:2}
+.home-actions a{color:#075b31;text-decoration:none;font-size:35px;font-weight:700;line-height:1}
+.cb-logo{width:min(540px,72vw);height:auto;aspect-ratio:520/360;margin:12px auto 0}
+.cb-logo svg{width:100%;height:100%;display:block}
+.home-wordmark{font:900 clamp(35px,6.5vw,76px)/1 Arial,sans-serif;letter-spacing:-3px;margin:0 auto 28px;color:#075b31}
+.home-wordmark em{font-style:normal;color:#e99100}
+.home-menu .main-menu-grid{max-width:1140px;gap:14px}
+.home-menu .main-menu-card{position:relative;min-height:190px;padding:25px 22px 22px 170px;border-radius:30px;justify-content:center;gap:8px;box-shadow:none;text-align:left}
+.home-menu .menu-card-icon{position:absolute;left:28px;top:50%;transform:translateY(-50%);width:112px;height:112px;border-radius:0;background:transparent;font-size:76px;display:grid;place-items:center;color:#075b31}
+.home-menu .main-menu-card strong{font-size:clamp(17px,2.5vw,29px);line-height:1.12;color:#063c25}
+.home-menu .main-menu-card small{font-size:clamp(12px,1.7vw,19px);color:#46554c;line-height:1.35}
+.home-menu .main-menu-card b{position:absolute;right:22px;top:50%;transform:translateY(-50%);font-size:40px;color:#063c25}
+.home-menu .menu-green{background:#e2f6c9}.home-menu .menu-yellow{background:#fff0bf}.home-menu .menu-blue{background:#d9f2fa}.home-menu .menu-peach{background:#ffe4d2}
+.home-menu .menu-green .menu-card-icon{color:#075b31}.home-menu .menu-yellow .menu-card-icon{color:#d85a14}.home-menu .menu-blue .menu-card-icon{color:#075b31}.home-menu .menu-peach .menu-card-icon{color:#075b31}
+@media(min-width:700px){.home-menu .main-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+ main{padding:0 12px}
+ .home-menu{margin:0 -12px;padding:18px 12px 24px}
+ .cb-logo{width:min(92vw,440px);margin-top:22px}
+ .home-wordmark{font-size:clamp(34px,9vw,52px);letter-spacing:-2px;margin-bottom:24px}
+ .home-menu .main-menu-grid{grid-template-columns:1fr 1fr;gap:9px}
+ .home-menu .main-menu-card{min-height:190px;padding:100px 12px 15px;border-radius:22px;justify-content:flex-start;gap:8px}
+ .home-menu .menu-card-icon{top:14px;left:12px;transform:none;width:70px;height:72px;font-size:52px}
+ .home-menu .main-menu-card strong{font-size:16px}
+ .home-menu .main-menu-card small{font-size:11px}
+ .home-menu .main-menu-card b{right:12px;bottom:9px;top:auto;transform:none;font-size:30px}
+ .home-actions{right:20px;top:15px;gap:18px}
+ .home-actions a{font-size:29px}
+}
