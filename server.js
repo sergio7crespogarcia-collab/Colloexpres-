@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-app.use(express.json({ limit: "20kb" }));
+app.use(express.json({ limit: "9mb" }));
 app.use(express.static(path.join(__dirname)));
 
 const requestWindows = new Map();
@@ -23,6 +23,52 @@ app.use("/api", (req, res, next) => {
     return res.status(429).json({ error: "Has enviado demasiadas solicitudes. Espera un minuto y vuelve a intentarlo." });
   }
   next();
+});
+
+
+app.post("/api/analyze-product", async (req, res) => {
+  try {
+    const image = req.body?.image;
+    const mimeType = req.body?.mimeType;
+    if (typeof image !== "string" || !["image/jpeg", "image/png", "image/webp"].includes(mimeType)) {
+      return res.status(400).json({ error: "Haz una foto en formato JPG, PNG o WEBP." });
+    }
+    if (image.length > 8_000_000) return res.status(413).json({ error: "La foto pesa demasiado. Inténtalo con una imagen más pequeña." });
+    if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: "El análisis automático aún no está activado: falta configurar OPENAI_API_KEY en el servidor." });
+
+    const visionModel = process.env.OPENAI_VISION_MODEL || "gpt-4.1-mini";
+    const upstream = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: visionModel,
+        instructions: `Analizas fotografías de alimentos y productos de supermercado para COLLOEXPRES (España y Portugal). Sé prudente: una imagen NO permite certificar seguridad, frescura interna ni ausencia de bacterias. Evalúa solo señales visibles. No inventes datos ilegibles. Si no se ve bien, usa "no_determinado". Devuelve SOLO JSON con esta estructura: {"product":"nombre identificado o No identificado","brand":"marca visible o No visible","condition":"aparentemente_bien | señales_de_alerta | no_determinado","visible_signs":["señales observables concretas"],"advice":"consejo breve y prudente","price_status":"no_disponible","price_message":"Precio no disponible: todavía no hay un precio real verificado para este producto."}. Señales de alerta posibles: moho visible, envase hinchado, fuga, rotura, deterioro visible. No infieras estado interno por apariencia exterior.`,
+        input: [{ role: "user", content: [
+          { type: "input_text", text: "Analiza este producto. Identifica alimento y marca si son visibles y revisa únicamente señales externas visibles de deterioro o daños." },
+          { type: "input_image", image_url: `data:${mimeType};base64,${image}`, detail: "high" }
+        ]}],
+        text: { format: { type: "json_object" } },
+        max_output_tokens: 500
+      })
+    });
+    const payload = await upstream.json();
+    if (!upstream.ok) return res.status(502).json({ error: payload?.error?.message || "No se pudo analizar la foto." });
+    const outputText = (payload.output || []).flatMap(part => part.content || []).filter(part => part.type === "output_text").map(part => part.text).join("\n");
+    if (!outputText) return res.status(502).json({ error: "El análisis no devolvió un resultado." });
+    const parsed = JSON.parse(outputText);
+    return res.json({
+      product: String(parsed.product || "No identificado"),
+      brand: String(parsed.brand || "No visible"),
+      condition: ["aparentemente_bien", "señales_de_alerta", "no_determinado"].includes(parsed.condition) ? parsed.condition : "no_determinado",
+      visible_signs: Array.isArray(parsed.visible_signs) ? parsed.visible_signs.slice(0, 6).map(String) : [],
+      advice: String(parsed.advice || "No se puede confirmar la seguridad del alimento mediante una foto."),
+      price_status: "no_disponible",
+      price_message: "Precio no disponible: todavía no hay un precio real verificado para este producto."
+    });
+  } catch (err) {
+    console.error("Product photo analysis failed:", err.message);
+    return res.status(500).json({ error: "No se pudo analizar la foto. Inténtalo de nuevo." });
+  }
 });
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "COLLOEXPRES" }));
