@@ -305,6 +305,7 @@ $("menuBtn").addEventListener("click", async () => {
   const host=document.querySelector('.topbar');
   (host||document.body).append(panel);
   const launcher=document.getElementById("pepaLauncher"),chat=document.getElementById("pepaChat"),messages=document.getElementById("pepaMessages"),input=document.getElementById("pepaInput"),form=document.getElementById("pepaForm"),send=document.getElementById("pepaSend");
+  document.body.append(chat); // El chat vive fuera de la cabecera para ocupar toda la pantalla sin recortes.
   const speakReplyTextBtn=document.getElementById("pepaSpeakReplyText");const switchVoice=document.getElementById("pepaSwitchVoice"),switchWrite=document.getElementById("pepaSwitchWrite");const modeChoice=document.getElementById("pepaModeChoice"),writeMode=document.getElementById("pepaWriteMode"),voiceMode=document.getElementById("pepaVoiceMode"),voiceControls=document.getElementById("pepaVoiceControls"),listenBtn=document.getElementById("pepaListen"),speakReplyBtn=document.getElementById("pepaSpeakReply"),stopVoiceBtn=document.getElementById("pepaStopVoice"),voiceStatus=document.getElementById("pepaVoiceStatus");
   let interactionMode="choose",recognition=null;
   const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
