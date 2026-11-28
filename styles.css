@@ -1008,7 +1008,7 @@ body > #pepaChat.pepa-write-mode #pepaModeChoice{display:none!important}
 /* Fondo global con marcas de supermercados, discreto y detrás de toda la app */
 body{position:relative!important;isolation:isolate;background:#f4f6fa!important}
 .brand-wall{
- position:fixed;inset:0;z-index:-1;display:flex;flex-direction:column;
+  position:fixed;inset:0;z-index:0;display:flex;flex-direction:column;
  justify-content:space-around;gap:clamp(24px,6vh,70px);overflow:hidden;
  padding:24px 0;pointer-events:none;opacity:.12;
  background:linear-gradient(135deg,#f7fafc,#eef4f2);
@@ -1029,7 +1029,7 @@ body{position:relative!important;isolation:isolate;background:#f4f6fa!important}
 
 
 /* Logotipos originales como imágenes, no nombres recreados */
-.brand-wall{opacity:.13!important;background:#f4f6fa!important;gap:clamp(28px,7vh,82px)!important}
+.brand-wall{opacity:.20!important;background:transparent!important;gap:clamp(28px,7vh,82px)!important}
 .brand-wall-row{align-items:center!important;gap:clamp(22px,5vw,64px)!important}
 .brand-wall-row .brand-logo{
  display:block!important;flex:0 0 auto!important;
@@ -1041,8 +1041,13 @@ body{position:relative!important;isolation:isolate;background:#f4f6fa!important}
 }
 .brand-wall-row .logo-lidl,.brand-wall-row .logo-aldi{width:clamp(58px,10vw,105px)!important;height:clamp(58px,10vw,105px)!important}
 @media(max-width:600px){
- .brand-wall{opacity:.11!important;gap:36px!important}
+ .brand-wall{opacity:.17!important;gap:36px!important}
  .brand-wall-row{gap:18px!important}
  .brand-wall-row .brand-logo{width:clamp(68px,19vw,100px)!important;height:clamp(42px,12vw,64px)!important;max-width:22vw!important}
  .brand-wall-row .logo-lidl,.brand-wall-row .logo-aldi{width:clamp(52px,15vw,78px)!important;height:clamp(52px,15vw,78px)!important}
 }
+
+/* Asegurar que el fondo quede visible detrás del contenido */
+body{isolation:isolate!important}
+.brand-wall{z-index:0!important;opacity:.20!important;background:transparent!important}
+.topbar,main,.bottom-nav,footer{position:relative!important;z-index:1!important}
