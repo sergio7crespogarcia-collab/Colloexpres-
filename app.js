@@ -120,19 +120,21 @@ $("menuBtn").addEventListener("click", async () => {
   const basket=page("Cesta de la compra","Añade productos y organiza tu lista.");
   const menuPage=page("Hacer menú","Crea ideas de comidas con ayuda de la IA.");
   const comparePage=page("Comparación de supermercados","DIA · Eroski · Gadis · Familia y más.");
+  const cameraPage=page("Cámara y marcas","Fotografía productos y compara sus formatos y precios.");
+  cameraPage.insertAdjacentHTML("beforeend","<section class=\"camera-panel\" id=\"cameraPanel\"><div class=\"camera-intro\"><span class=\"camera-emoji\">📸🍎</span><div><h3>Escáner de compra</h3><p>Fotografía productos y compara marca, tamaño y precio.</p></div></div><label class=\"camera-pick\" for=\"productPhoto\">📷 Abrir cámara o elegir foto</label><input id=\"productPhoto\" type=\"file\" accept=\"image/*\" capture=\"environment\" class=\"camera-input\"><img id=\"photoPreview\" class=\"photo-preview hidden\" alt=\"Foto del producto\"><div class=\"camera-fields\"><label>Producto A — marca y formato<input id=\"brandA\" placeholder=\"Ej. Marca A, 500 g\"></label><label>Precio A (€)<input id=\"priceA\" type=\"number\" min=\"0\" step=\"0.01\" placeholder=\"2,50\"></label><label>Producto B — marca y formato<input id=\"brandB\" placeholder=\"Ej. Marca B, 750 g\"></label><label>Precio B (€)<input id=\"priceB\" type=\"number\" min=\"0\" step=\"0.01\" placeholder=\"3,20\"></label></div><button id=\"compareBrandsBtn\" class=\"primary-btn\" type=\"button\">Comparar productos</button><div id=\"brandResult\" class=\"camera-result\" aria-live=\"polite\">Introduce los precios y formatos de las etiquetas para compararlos.</div><div class=\"condition-check\"><h4>🧐 Revisa el estado del envase</h4><ul><li>Sin golpes, fugas ni hinchazón.</li><li>Precinto intacto.</li><li>Fecha legible y adecuada.</li><li>Refrigeración correcta.</li></ul><p class=\"safety-note\">Una foto no puede confirmar que el alimento sea seguro ni detectar bacterias. Si tienes dudas, no lo compres ni lo consumas.</p></div></section>");
   menuPage.append(menu);
   weekly.append(ai);
   basket.append(add,list,compare);
   comparePage.append(retailers,results);
   if(hero)hero.remove();
   workspace.remove();
-  const pages=[home,menuPage,weekly,comparePage,basket];
+  const pages=[home,menuPage,weekly,comparePage,basket,cameraPage];
   const book=document.createElement("div");book.className="book-view";
   const frame=document.createElement("div");frame.className="book-frame";
   pages.forEach((p,i)=>{p.classList.add("book-page");p.dataset.page=i;frame.append(p);});
   book.append(frame);
   const controls=document.createElement("nav");controls.className="book-controls";controls.setAttribute("aria-label","Navegación de páginas");
-  controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><span class="book-page-count">1 / 5</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
+  controls.innerHTML='<button type="button" class="book-prev" aria-label="Página anterior">‹</button><span class="book-page-count">1 / 6</span><button type="button" class="book-next" aria-label="Página siguiente">›</button>';
   book.append(controls);main.replaceChildren(book);
   let current=0;
   function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle("active-page",i===current);p.setAttribute("aria-hidden",i===current?"false":"true");});controls.querySelector(".book-page-count").textContent=(current+1)+" / "+pages.length;controls.querySelector(".book-prev").disabled=current===0;controls.querySelector(".book-next").disabled=current===pages.length-1;}
@@ -160,4 +162,7 @@ $("menuBtn").addEventListener("click", async () => {
   frame.addEventListener("touchstart",event=>{x=event.changedTouches[0].clientX;y=event.changedTouches[0].clientY;},{passive:true});
   frame.addEventListener("touchend",event=>{const dx=event.changedTouches[0].clientX-x,dy=event.changedTouches[0].clientY-y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)show(current+(dx<0?1:-1));},{passive:true});
   show(0);
+  const photo=document.getElementById("productPhoto"),preview=document.getElementById("photoPreview");
+  photo.addEventListener("change",()=>{const file=photo.files&&photo.files[0];if(!file)return;if(preview.dataset.url)URL.revokeObjectURL(preview.dataset.url);const url=URL.createObjectURL(file);preview.src=url;preview.dataset.url=url;preview.classList.remove("hidden");});
+  document.getElementById("compareBrandsBtn").addEventListener("click",()=>{const pa=Number(document.getElementById("priceA").value),pb=Number(document.getElementById("priceB").value),out=document.getElementById("brandResult");if(!(pa>0&&pb>0)){out.textContent="Introduce los dos precios para compararlos.";return;}const aName=document.getElementById("brandA").value||"Producto A",bName=document.getElementById("brandB").value||"Producto B";out.textContent=aName+": "+pa.toFixed(2)+" €. "+bName+": "+pb.toFixed(2)+" €. Para comparar el coste real por kilo o litro, comprueba el peso o volumen de ambos envases. Esta versión no lee automáticamente las etiquetas de la foto.";});
 })();
