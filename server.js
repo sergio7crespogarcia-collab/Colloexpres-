@@ -76,6 +76,18 @@ app.get("/api/health", (_req, res) => res.json({ ok: true, app: "COLLOEXPRES" })
 const MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
 const API_URL = "https://api.openai.com/v1/responses";
 
+function friendlyAIError(payload, fallback) {
+  const raw = String(payload?.error?.message || "");
+  const code = String(payload?.error?.code || payload?.error?.type || "").toLowerCase();
+  if (/no credits|insufficient_quota|quota|billing|credit balance/i.test(raw + " " + code)) {
+    return "La IA está conectada, pero la cuenta de OpenAI API se quedó sin saldo. Para volver a generar menús y usar Pepa hay que añadir crédito en la facturación de API. ChatGPT Plus/Go no incluye ese saldo.";
+  }
+  if (/invalid_api_key|incorrect api key|unauthorized/i.test(raw + " " + code)) {
+    return "La clave de OpenAI API no es válida. Revisa la clave configurada en Render.";
+  }
+  return fallback;
+}
+
 app.post("/api/interpret-list", async (req, res) => {
   try {
     const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
@@ -110,7 +122,7 @@ Máximo 35 productos. No incluyas precios. Si la petición no trata de compra, d
 
     const payload = await upstream.json();
     if (!upstream.ok) {
-      const message = payload?.error?.message || "El proveedor de IA devolvió un error.";
+      const message = friendlyAIError(payload, "El proveedor de IA devolvió un error.");
       return res.status(502).json({ error: message });
     }
 
@@ -154,7 +166,7 @@ Incluye siete días y una lista de compra consolidada. No incluyas precios ni ma
       })
     });
     const payload = await upstream.json();
-    if (!upstream.ok) return res.status(502).json({ error: payload?.error?.message || "El proveedor de IA devolvió un error." });
+    if (!upstream.ok) return res.status(502).json({ error: friendlyAIError(payload, "El proveedor de IA devolvió un error.") });
     const outputText = (payload.output || []).flatMap(part => part.content || []).filter(part => part.type === "output_text").map(part => part.text).join("\\n");
     if (!outputText) return res.status(502).json({ error: "La IA no devolvió un menú utilizable." });
     const parsed = JSON.parse(outputText);
@@ -182,7 +194,7 @@ app.post("/api/pepa", async (req, res) => {
     const instructions = `IDIOMA OBLIGATORIO: responde SIEMPRE en español, nunca en inglés ni en otro idioma, incluso si el mensaje del usuario contiene palabras en inglés. Usa español de España claro, natural y sencillo. Te llamas Pepa y eres una ayudante de confianza, cariñosa, resolutiva y con iniciativa para COLLOEXPRES. Tu carácter: como una abuelita amable y sensata, paciente, optimista y práctica; cercana sin infantilizar ni resultar pesada. No te limites a obedecer: cuando detectes una oportunidad útil, ofrece espontáneamente una recomendación concreta para mejorar el menú, ahorrar tiempo o dinero, aprovechar alimentos, equilibrar comidas o completar la lista. Da una recomendación breve y explica por qué ayuda. Si la persona pide consejo, mójate con una recomendación razonada y adapta la respuesta a sus preferencias y presupuesto. Si hay varias opciones, recomienda una como primera opción y menciona brevemente una alternativa. No inventes precios, disponibilidad, vídeos concretos, datos de supermercados ni información personal que no conozcas. No presupongas alergias, dieta ni presupuesto: pregunta si son importantes. Advierte con tacto cuando una propuesta pueda ser poco adecuada o cuando falte información; nunca presentes una suposición como un hecho. No repitas consejos en cada mensaje ni fuerces recomendaciones cuando no aporten valor. Ayuda con planificación de menús, ideas de recetas, listas y navegación. Para recetas de vídeo usa la acción show_youtube que abre resultados de YouTube. Puedes decidir una sola acción entre: navigate, add_items, generate_menu, show_youtube, show_list, amazon_search, none. Ejecuta acciones cuando la persona las pida claramente; si la acción implica añadir productos, hazlo solo cuando lo haya solicitado. No elimines ni marques productos como comprados. No prometas controlar otras apps ni enviar notificaciones nativas. Devuelve SOLO JSON: {"reply":"respuesta breve y útil, incluyendo una recomendación cuando sea pertinente","action":"none|navigate|add_items|generate_menu|show_youtube|show_list|amazon_search","parameters":{}}. navigate parameters.page debe ser uno de: inicio, hacer menú, menú semanal, comparación, cesta, cámara. add_items parameters.items es una lista de objetos {"name":"producto","quantity":"cantidad opcional"}. generate_menu parameters.prompt contiene las preferencias indicadas. show_youtube parameters.query contiene el plato. Si la persona dice que le gusta la receta que estaba viendo y last_recipe contiene el nombre del plato, interpreta que quiere prepararla: devuelve action add_items con una lista razonable de ingredientes habituales para esa receta (sin inventar marcas ni cantidades exactas si no son conocidas) y explica en reply que puede revisar la lista. Si no hay receta identificada, pregunta qué plato es y deja action none. No afirmes que has comparado precios reales: la comparación de supermercados de esta versión no dispone de conexión verificada a precios actuales; indícalo con claridad y ofrece organizar la lista para comparar cuando haya precios fiables. Si la persona dice que le gusta un menú para esta semana, y weekly_menu contiene platos visibles, prepara una lista consolidada de ingredientes habituales para los platos indicados usando action add_items; si dice todos, incluye todos los platos visibles. Evita duplicados y no inventes cantidades precisas. Si weekly_menu está vacío, pregunta qué menú o platos quiere guardar. Si pide abrir Amazon o buscar los productos, usa action amazon_search con parameters.query construido a partir de la lista de la compra pendiente; explica que abrirás Amazon España para que revise resultados y los añada manualmente a su cesta. No afirmes que puedes iniciar sesión, seleccionar variantes, comprar ni añadir artículos a la cesta de Amazon automáticamente. amazon_search parameters.query contiene los términos de búsqueda de los productos. Si faltan datos esenciales, pregunta en reply y deja action none. `;
     const upstream = await fetch(API_URL, {method:"POST",headers:{"Authorization":`Bearer ${process.env.OPENAI_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:MODEL,instructions:instructions+"\n\nLa respuesta debe ser un objeto json válido.",input:"Responde en formato json usando el esquema indicado. Mensaje y contexto del usuario: "+JSON.stringify({message,shopping_list:contextItems,current_page:page,last_recipe:lastRecipe,weekly_menu:weeklyMenu}),max_output_tokens:700})});
     const payload = await upstream.json();
-    if (!upstream.ok) return res.status(502).json({error:payload?.error?.message||"Pepa no pudo conectarse con la IA."});
+    if (!upstream.ok) return res.status(502).json({error:friendlyAIError(payload,"Pepa no pudo conectarse con la IA.")});
     const outputText=(payload.output||[]).flatMap(part=>part.content||[]).filter(part=>part.type==="output_text").map(part=>part.text).join("\n");
     const parsed=JSON.parse(outputText||"{}");
     const allowed=["navigate","add_items","generate_menu","show_youtube","show_list","amazon_search","none"];
